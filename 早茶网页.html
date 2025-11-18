@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<!-- 声明文档类型为HTML5 -->
+<html lang="zh-CN">
+<!-- HTML根元素，设置语言为中文 -->
+<head>
+  <!-- 头部区域：包含文档元数据、外部资源和样式设置 -->
+  <meta charset="UTF-8">
+  <!-- 设置字符编码为UTF-8，确保中文正常显示 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- 视口设置：适配移动设备，宽度为设备宽度，初始缩放比例1.0 -->
+  <title>营养膳食模拟器</title>
+  <!-- 网页标题：显示在浏览器标签页 -->
+  
+  <!-- 引入外部资源 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 引入Tailwind CSS框架：用于快速构建响应式UI -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <!-- 引入Font Awesome图标库：用于显示各种图标（如餐具、刷新等） -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  <!-- 引入Chart.js：用于绘制膳食营养比例图表 -->
+  
+  <!-- Tailwind 配置：自定义主题样式 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            // 自定义颜色变量：用于统一网页色调
+            primary: '#3B82F6', // 主色调（蓝色）
+            secondary: '#F97316', // 辅助色（橙色）
+            neutral: '#F3F4F6', // 中性色（浅灰）
+            success: '#10B981', // 成功色（绿色）
+            warning: '#FBBF24', // 警告色（黄色）
+            info: '#06B6D4', // 信息色（青色）
+          },
+          fontFamily: {
+            // 自定义字体：优先使用Inter字体
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <!-- 自定义Tailwind工具类：扩展框架样式 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto; /* 优化内容渲染性能 */
+      }
+      .drag-item {
+        /* 拖拽元素样式：鼠标样式、过渡效果、悬停缩放 */
+        @apply cursor-grab active:cursor-grabbing transition-all duration-300 hover:scale-105;
+      }
+      .plate-item {
+        /* 食物盘子动画样式：定位、尺寸、背景、过渡效果 */
+        @apply absolute w-16 h-16 rounded-full bg-white/80 shadow-md flex items-center justify-center transition-all duration-300 opacity-0 scale-90;
+      }
+      .food-shadow {
+        /* 食物图片阴影效果：增强视觉层次感 */
+        filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
+      }
+      .boy-transition {
+        /* 男孩形象过渡动画：1秒平滑变化 */
+        transition: all 1s ease-in-out;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-green-50 min-h-screen font-sans">
+  <!-- 页面主体：背景为蓝绿渐变，最小高度占满屏幕，使用自定义字体 -->
+  
+  <!-- 页面标题区域：固定在顶部，带半透明背景和阴影 -->
+  <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center">
+      <!-- 容器：居中显示，内边距，响应式布局（移动端垂直排列，桌面端水平排列） -->
+      <h1 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold text-primary flex items-center">
+        <!-- 主标题：字体大小响应式变化（1.5rem到2.5rem），粗体，主色调，弹性布局 -->
+        <i class="fa fa-cutlery mr-3 text-secondary"></i>
+        <!-- 餐具图标：使用Font Awesome，右外边距3，辅助色 -->
+        美味早茶我会选
+        <!-- 标题文本 -->
+      </h1>
+      <div class="mt-2 md:mt-0 text-sm text-gray-600">
+        <!-- 提示文本容器：移动端顶部间距2，桌面端0，小号字体，灰色 -->
+        <span class="bg-blue-100 text-primary px-3 py-1 rounded-full flex items-center">
+          <!-- 提示标签：浅蓝色背景，主色文本，内边距，圆角，弹性布局 -->
+          <i class="fa fa-info-circle mr-1"></i>
+          <!-- 信息图标：右外边距1 -->
+          拖动任意5道菜投喂
+          <!-- 提示文本 -->
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-8">
+    <!-- 主内容区域：居中容器，内边距 -->
+    
+    <!-- 游戏说明卡片：白色背景，圆角，阴影，居中显示 -->
+    <div class="bg-white rounded-xl shadow-md p-4 mb-6 max-w-3xl mx-auto">
+      <p class="text-gray-700 text-center">选择下方18道菜品中的任意5道，拖动到男孩身上进行投喂，观察他的变化和营养摄入情况！</p>
+      <!-- 说明文本：灰色，居中 -->
+      <div id="selected-count" class="text-center mt-2 font-medium text-primary">
+        <!-- 已选择数量容器：居中，顶部间距2，中等粗细，主色 -->
+        已选择: <span id="count">0</span>/5
+        <!-- 数量显示：初始为0/5 -->
+      </div>
+    </div>
+    
+    <!-- 主要交互区域：响应式网格布局（移动端1列，大屏3列） -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- 左侧：男孩展示区域（占1列） -->
+      <div class="lg:col-span-1">
+        <div class="bg-white rounded-2xl shadow-lg p-6 h-full flex flex-col items-center justify-center relative overflow-hidden">
+          <!-- 白色卡片：大圆角，阴影，内边距，高度占满，弹性布局居中内容 -->
+          <h2 class="text-xl font-semibold text-gray-800 mb-4">我们的外地朋友</h2>
+          <!-- 区域标题：中号字体，半粗体，深灰，底部间距4 -->
+          
+          <!-- 男孩容器：相对定位，宽100%，最大宽度小尺寸，正方形比例，弹性布局居中 -->
+          <div id="boy-container" class="relative w-full max-w-xs aspect-square flex items-center justify-center">
+            <div id="boy" class="boy-transition w-48 h-64 bg-contain bg-no-repeat bg-center" style="background-image: url('https://picsum.photos/id/237/300/400');"></div>
+            <!-- 男孩图片：应用过渡动画，宽48，高64，背景图自适应，不重复，居中显示 -->
+            
+            <!-- 食物盘子动画区域：绝对定位覆盖男孩容器，不响应鼠标事件 -->
+            <div id="plate-area" class="absolute inset-0 pointer-events-none"></div>
+          </div>
+          
+          <!-- 感受显示区域：顶部间距6，浅灰背景，圆角，内边距，宽100%，居中，最小高度80px -->
+          <div id="feeling" class="mt-6 bg-neutral rounded-xl p-4 w-full text-center min-h-[80px] flex items-center justify-center">
+            <p class="text-gray-600">等待投喂...</p>
+            <!-- 初始感受文本：灰色 -->
+          </div>
+          
+          <!-- 重置按钮：顶部间距4，内边距，主色背景，悬停加深，白色文本，圆角，过渡效果，初始半透明不可点击 -->
+          <button id="reset-btn" class="mt-4 px-6 py-2 bg-primary hover:bg-primary/90 text-white rounded-full transition-all duration-300 flex items-center opacity-50 cursor-not-allowed">
+            <i class="fa fa-refresh mr-2"></i>
+            <!-- 刷新图标：右外边距2 -->
+            重新开始
+            <!-- 按钮文本 -->
+          </button>
+        </div>
+      </div>
+      
+      <!-- 右侧：食物选择和营养分析（占2列） -->
+      <div class="lg:col-span-2 space-y-6">
+        <!-- 膳食宝塔分析卡片 -->
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+          <h2 class="text-xl font-semibold text-gray-800 mb-4">膳食营养分析</h2>
+          <!-- 区域标题 -->
+          <div class="h-[250px]">
+            <!-- 图表容器：高度250px -->
+            <canvas id="nutrition-chart"></canvas>
+            <!-- Chart.js图表画布：用于绘制营养比例图 -->
+          </div>
+        </div>
+        
+        <!-- 食物选择区卡片 -->
+        <div class="bg-white rounded-2xl shadow-lg p-6">
+          <h2 class="text-xl font-semibold text-gray-800 mb-4">选择菜品 (18道)</h2>
+          <!-- 区域标题 -->
+          <div id="food-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <!-- 食物容器：响应式网格（移动端2列，平板3列，中屏4列，大屏6列），间距4 -->
+            <!-- 食物项目将通过JS动态生成 -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <!-- 页脚：深灰背景，白色文本，内边距，顶部间距12 -->
+  <footer class="bg-gray-800 text-white py-6 mt-12">
+    <div class="container mx-auto px-4 text-center">
+      <!-- 居中容器 -->
+      <p>小男孩模拟器 &copy; 2025</p>
+      <!-- 版权信息 -->
+    </div>
+  </footer>
+
+  <script>
+    // 食物数据 - 18道菜：包含ID、名称、图片、类别、营养比例（膳食宝塔层级）
+    const foods = [
+      { id: 1, name: '红米肠', image: './image/红米肠.png', category: '谷物', ratio: { grains: 80, vegetables: 0, protein: 10, dairy: 0, fats: 10 } },
+      { id: 2, name: '水晶虾饺', image: 'https://picsum.photos/id/488/100/100', category: '蛋白质', ratio: { grains: 0, vegetables: 0, protein: 85, dairy: 0, fats: 15 } },
+      { id: 3, name: '鲜虾干蒸', image: 'https://picsum.photos/id/306/100/100', category: '蔬菜', ratio: { grains: 10, vegetables: 80, protein: 5, dairy: 0, fats: 5 } },
+      { id: 4, name: '芋头蒸排骨', image: 'https://picsum.photos/id/425/100/100', category: '乳制品', ratio: { grains: 0, vegetables: 0, protein: 20, dairy: 70, fats: 10 } },
+      { id: 5, name: '凤爪', image: 'https://picsum.photos/id/431/100/100', category: '蛋白质', ratio: { grains: 0, vegetables: 0, protein: 70, dairy: 0, fats: 30 } },
+      { id: 6, name: '糯米鸡', image: 'https://picsum.photos/id/488/100/100', category: '蛋白质', ratio: { grains: 0, vegetables: 0, protein: 40, dairy: 0, fats: 60 } },
+      { id: 7, name: '陈皮牛肉丸', image: 'https://picsum.photos/id/102/100/100', category: '水果', ratio: { grains: 20, vegetables: 70, protein: 5, dairy: 0, fats: 5 } },
+      { id: 8, name: '肠粉', image: 'https://picsum.photos/id/225/100/100', category: '谷物', ratio: { grains: 85, vegetables: 0, protein: 10, dairy: 0, fats: 5 } },
+      { id: 9, name: '艇仔粥', image: 'https://picsum.photos/id/365/100/100', category: '蛋白质', ratio: { grains: 0, vegetables: 0, protein: 60, dairy: 0, fats: 10 } },
+      { id: 10, name: '白灼菜心', image: 'https://picsum.photos/id/488/100/100', category: '蛋白质', ratio: { grains: 0, vegetables: 0, protein: 75, dairy: 0, fats: 25 } },
+      { id: 11, name: '白灼芥兰', image: 'https://picsum.photos/id/493/100/100', category: '谷物', ratio: { grains: 40, vegetables: 0, protein: 5, dairy: 0, fats: 55 } },
+      { id: 12, name: '三丝炒面', image: 'https://picsum.photos/id/106/100/100', category: '水果', ratio: { grains: 15, vegetables: 80, protein: 3, dairy: 0, fats: 2 } },
+      { id: 13, name: '蛋挞', image: 'https://picsum.photos/id/225/100/100', category: '谷物', ratio: { grains: 70, vegetables: 0, protein: 15, dairy: 0, fats: 15 } },
+      { id: 14, name: '黄金糕', image: 'https://picsum.photos/id/425/100/100', category: '乳制品', ratio: { grains: 0, vegetables: 0, protein: 15, dairy: 75, fats: 10 } },
+      { id: 15, name: '萝卜糕', image: 'https://picsum.photos/id/488/100/100', category: '蛋白质', ratio: { grains: 10, vegetables: 0, protein: 30, dairy: 0, fats: 60 } },
+      { id: 16, name: '菠萝包', image: 'https://picsum.photos/id/306/100/100', category: '蔬菜', ratio: { grains: 5, vegetables: 85, protein: 8, dairy: 0, fats: 2 } },
+      { id: 17, name: '叉烧包', image: 'https://picsum.photos/id/292/100/100', category: '脂肪', ratio: { grains: 0, vegetables: 0, protein: 20, dairy: 0, fats: 80 } },
+      { id: 18, name: '豆浆', image: 'https://picsum.photos/id/292/100/100', category: '混合', ratio: { grains: 40, vegetables: 10, protein: 20, dairy: 10, fats: 20 } }
+    ];
+    
+    // 感受数据：根据不同饮食结构生成对应的餐后感受
+    const feelings = {
+      balanced: [
+        "太美味了！营养均衡，感觉很健康！",
+        "吃得刚刚好，身体充满活力！",
+        "这些食物搭配很棒，我感觉很舒服。"
+      ],
+      highProtein: [
+        "好多蛋白质，感觉肌肉都要长出来了！",
+        "全是肉，有点撑但很满足。",
+        "蛋白质摄入充足，精力充沛！"
+      ],
+      highCarbs: [
+        "碳水好多，有点昏昏欲睡...",
+        "吃了太多主食，肚子有点胀。",
+        "能量满满，但需要多吃点蔬菜。"
+      ],
+      highFat: [
+        "好油腻啊，有点不舒服。",
+        "脂肪摄入太多了，感觉身体变沉了。",
+        "这些食物热量好高，得运动一下了。"
+      ],
+      highVeggie: [
+        "好多蔬菜水果，感觉很清爽！",
+        "维生素充足，皮肤都变好了！",
+        "有点饿，可能需要加点主食。"
+      ]
+    };
+    
+    // 全局变量
+    let selectedFoods = []; // 存储已选择的食物（最多5个）
+    let nutritionChart = null; // 膳食营养图表实例
+    let boyState = 'normal'; // 男孩状态（正常/胖/瘦/健壮）
+    
+    // DOM 元素：缓存页面元素，避免重复查询
+    const foodContainer = document.getElementById('food-container'); // 食物容器
+    const boyContainer = document.getElementById('boy-container'); // 男孩容器
+    const feelingElement = document.getElementById('feeling'); // 感受显示区域
+    const countElement = document.getElementById('count'); // 已选择数量
+    const resetBtn = document.getElementById('reset-btn'); // 重置按钮
+    const plateArea = document.getElementById('plate-area'); // 食物动画区域
+    
+    // 初始化食物列表：动态生成18道菜品的UI
+    function initFoods() {
+      foods.forEach(food => { // 遍历所有食物数据
+        const foodEl = document.createElement('div'); // 创建食物元素
+        // 设置食物元素样式：可拖拽、悬停效果、边框过渡等
+        foodEl.className = 'drag-item bg-white rounded-xl shadow p-2 flex flex-col items-center justify-center border-2 border-transparent hover:border-primary transition-all duration-300';
+        foodEl.draggable = true; // 允许拖拽
+        foodEl.dataset.id = food.id; // 存储食物ID（用于识别）
+        
+        // 食物元素内容：图片+名称
+        foodEl.innerHTML = `
+          <div class="w-20 h-20 rounded-full overflow-hidden mb-2 flex items-center justify-center bg-neutral">
+            <img src="${food.image}" alt="${food.name}" class="w-full h-full object-cover food-shadow">
+          </div>
+          <span class="text-xs font-medium text-gray-700 text-center">${food.name}</span>
+        `;
+        
+        // 添加拖拽开始事件监听
+        foodEl.addEventListener('dragstart', handleDragStart);
+        foodContainer.appendChild(foodEl); // 添加到食物容器
+      });
+    }
+    
+    // 拖拽开始事件处理：限制最多选择5个食物
+    function handleDragStart(e) {
+      if (selectedFoods.length >= 5) { // 如果已选满5个，阻止拖拽
+        e.preventDefault();
+        return;
+      }
+      // 存储拖拽的食物ID
+      e.dataTransfer.setData('text/plain', e.target.dataset.id);
+      // 拖拽时添加半透明效果
+      e.target.classList.add('opacity-50');
+    }
+    
+    // 初始化男孩区域的拖拽目标：允许接收拖拽的食物
+    function initDropZone() {
+      // 拖拽经过时：允许放置，添加背景色提示
+      boyContainer.addEventListener('dragover', (e) => {
+        e.preventDefault(); // 允许放置（默认阻止）
+        boyContainer.classList.add('bg-blue-50'); // 浅蓝色背景提示
+      });
+      
+      // 拖拽离开时：移除背景色提示
+      boyContainer.addEventListener('dragleave', () => {
+        boyContainer.classList.remove('bg-blue-50');
+      });
+      
+      // 放置食物时：处理选中逻辑
+      boyContainer.addEventListener('drop', (e) => {
+        e.preventDefault(); // 阻止默认行为
+        boyContainer.classList.remove('bg-blue-50'); // 移除背景提示
+        
+        // 获取拖拽的食物ID并查找对应食物
+        const foodId = parseInt(e.dataTransfer.getData('text/plain'));
+        const food = foods.find(f => f.id === foodId);
+        
+        // 校验：食物存在、未选满5个、未重复选择
+        if (food && selectedFoods.length < 5 && !selectedFoods.some(f => f.id === foodId)) {
+          selectedFoods.push(food); // 添加到已选列表
+          updateSelectedCount(); // 更新选择数量
+          createFoodAnimation(e.clientX, e.clientY); // 创建食物被吃的动画
+          
+          // 如果选满5个，触发后续逻辑
+          if (selectedFoods.length === 5) {
+            updateBoyState(); // 更新男孩身材
+            updateNutritionChart(); // 生成营养图表
+            updateFeeling(); // 显示餐后感受
+            enableResetButton(); // 启用重置按钮
+            disableAllFoods(); // 禁用所有食物拖拽
+          }
+        }
+      });
+    }
+    
+    // 创建食物被吃掉的动画：从点击位置飞到男孩嘴里
+    function createFoodAnimation(x, y) {
+      const plate = document.createElement('div'); // 创建盘子元素
+      plate.className = 'plate-item'; // 应用盘子样式
+      
+      // 计算相对于男孩容器的位置（将屏幕坐标转为容器内坐标）
+      const rect = boyContainer.getBoundingClientRect();
+      const left = x - rect.left - 32; // 减去容器偏移和自身一半宽度
+      const top = y - rect.top - 32; // 减去容器偏移和自身一半高度
+      
+      plate.style.left = `${left}px`; // 设置初始X坐标
+      plate.style.top = `${top}px`; // 设置初始Y坐标
+      
+      // 设置盘子内的食物图片（与选中的食物一致）
+      const foodId = selectedFoods[selectedFoods.length - 1].id;
+      const foodImg = document.querySelector(`[data-id="${foodId}"] img`).src;
+      plate.innerHTML = `<img src="${foodImg}" alt="食物" class="w-10 h-10 rounded-full object-cover">`;
+      
+      plateArea.appendChild(plate); // 添加到动画区域
+      
+      // 显示动画：从透明到不透明
+      setTimeout(() => {
+        plate.style.opacity = '1';
+        plate.style.scale = '1';
+      }, 10);
+      
+      // 移动动画：飞到男孩嘴里后消失
+      setTimeout(() => {
+        // 计算目标位置（男孩嘴的大致位置）
+        const boyRect = document.getElementById('boy').getBoundingClientRect();
+        const targetX = boyRect.width / 2 - 16;
+        const targetY = boyRect.height / 3 - 16;
+        
+        // 设置移动动画
+        plate.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        plate.style.left = `${targetX}px`;
+        plate.style.top = `${targetY}px`;
+        plate.style.scale = '0.6';
+        
+        // 消失动画
+        setTimeout(() => {
+          plate.style.opacity = '0';
+          plate.style.scale = '0';
+          setTimeout(() => plate.remove(), 300); // 移除元素
+        }, 500);
+      }, 500);
+    }
+    
+    // 更新已选择计数：同步显示选中数量，标记已选食物
+    function updateSelectedCount() {
+      countElement.textContent = selectedFoods.length; // 更新数字显示
+      
+      // 遍历所有食物元素，标记已选中的食物
+      document.querySelectorAll('.drag-item').forEach(el => {
+        const isSelected = selectedFoods.some(f => f.id === parseInt(el.dataset.id));
+        if (isSelected) { // 如果已选中
+          el.classList.add('border-primary', 'bg-blue-50'); // 添加选中样式
+          el.classList.remove('hover:border-primary'); // 移除悬停效果
+          el.draggable = false; // 禁止再次拖拽
+        }
+      });
+    }
+    
+    // 禁用所有食物拖拽：选满5个后调用，防止继续选择
+    function disableAllFoods() {
+      document.querySelectorAll('.drag-item').forEach(el => {
+        el.draggable = false; // 禁止拖拽
+        // 移除交互样式，添加半透明效果
+        el.classList.remove('cursor-grab', 'active:cursor-grabbing', 'hover:scale-105');
+        el.classList.add('opacity-70');
+      });
+    }
+    
+    // 更新男孩状态：根据食物营养比例改变身材
+    function updateBoyState() {
+      // 计算总营养比例（所有选中食物的比例总和）
+      const totalRatio = selectedFoods.reduce((acc, food) => {
+        acc.grains += food.ratio.grains;
+        acc.vegetables += food.ratio.vegetables;
+        acc.protein += food.ratio.protein;
+        acc.dairy += food.ratio.dairy;
+        acc.fats += food.ratio.fats;
+        return acc;
+      }, { grains: 0, vegetables: 0, protein: 0, dairy: 0, fats: 0 });
+      
+      // 计算各营养成分占比
+      const total = totalRatio.grains + totalRatio.vegetables + totalRatio.protein + totalRatio.dairy + totalRatio.fats;
+      const fatPercentage = (totalRatio.fats / total) * 100; // 脂肪占比
+      const proteinPercentage = (totalRatio.protein / total) * 100; // 蛋白质占比
+      const carbPercentage = (totalRatio.grains / total) * 100; // 碳水（谷物）占比
+      const vegPercentage = (totalRatio.vegetables / total) * 100; // 蔬果占比
+      
+      const boy = document.getElementById('boy'); // 获取男孩元素
+      
+      // 根据占比设置男孩状态（身材变化）
+      if (fatPercentage > 30) { // 高脂肪：变胖
+        boyState = 'fat';
+        boy.style.transform = 'scale(1.1)'; // 放大10%
+        boy.style.backgroundImage = "url('https://picsum.photos/id/237/300/400')"; // 胖男孩图片
+      } else if (proteinPercentage > 40) { // 高蛋白质：变健壮
+        boyState = 'muscular';
+        boy.style.transform = 'scale(1.05)'; // 放大5%
+        boy.style.backgroundImage = "url('https://picsum.photos/id/237/300/400')"; // 健壮男孩图片
+      } else if (vegPercentage > 40) { // 高蔬果：变瘦
+        boyState = 'slim';
+        boy.style.transform = 'scale(0.95)'; // 缩小5%
+        boy.style.backgroundImage = "url('https://picsum.photos/id/237/300/400')"; // 瘦男孩图片
+      } else { // 均衡：正常体型
+        boyState = 'normal';
+        boy.style.transform = 'scale(1)'; // 正常大小
+        boy.style.backgroundImage = "url('https://picsum.photos/id/237/300/400')"; // 正常体型图片
+      }
+    }
+    
+    // 更新膳食宝塔图表：使用Chart.js展示营养比例
+    function updateNutritionChart() {
+      // 计算平均营养比例（所有选中食物的比例平均值）
+      const avgRatio = selectedFoods.reduce((acc, food, index, array) => {
+        acc.grains += food.ratio.grains / array.length;
+        acc.vegetables += food.ratio.vegetables / array.length;
+        acc.protein += food.ratio.protein / array.length;
+        acc.dairy += food.ratio.dairy / array.length;
+        acc.fats += food.ratio.fats / array.length;
+        return acc;
+      }, { grains: 0, vegetables: 0, protein: 0, dairy: 0, fats: 0 });
+      
+      const ctx = document.getElementById('nutrition-chart').getContext('2d'); // 获取画布上下文
+      
+      // 如果图表已存在，先销毁（避免重复绘制）
+      if (nutritionChart) {
+        nutritionChart.destroy();
+      }
+      
+      // 创建新图表（柱状图）
+      nutritionChart = new Chart(ctx, {
+        type: 'bar', // 图表类型：柱状图
+        data: {
+          labels: ['谷物类', '蔬菜水果类', '蛋白质类', '乳制品', '脂肪类'], // X轴标签（膳食宝塔层级）
+          datasets: [{
+            label: '营养比例 (%)', // 数据集标签
+            data: [avgRatio.grains, avgRatio.vegetables, avgRatio.protein, avgRatio.dairy, avgRatio.fats], // 数据值
+            backgroundColor: [ // 柱子背景色
+              'rgba(59, 130, 246, 0.7)',
+              'rgba(16, 185, 129, 0.7)',
+              'rgba(249, 115, 22, 0.7)',
+              'rgba(251, 191, 36, 0.7)',
+              'rgba(139, 92, 246, 0.7)'
+            ],
+            borderColor: [ // 柱子边框色
+              'rgb(59, 130, 246)',
+              'rgb(16, 185, 129)',
+              'rgb(249, 115, 22)',
+              'rgb(251, 191, 36)',
+              'rgb(139, 92, 246)'
+            ],
+            borderWidth: 1 // 边框宽度
+          }]
+        },
+        options: {
+          responsive: true, // 响应式（自适应容器大小）
+          maintainAspectRatio: false, // 不保持宽高比（使用容器高度）
+          scales: {
+            y: {
+              beginAtZero: true, // Y轴从0开始
+              max: 100, // Y轴最大值100（百分比）
+              title: {
+                display: true,
+                text: '比例 (%)' // Y轴标题
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: false // 隐藏图例（简化显示）
+            }
+          }
+        }
+      });
+    }
+    
+    // 更新感受：根据营养结构显示随机餐后感受
+    function updateFeeling() {
+      // 计算营养类型（与updateBoyState逻辑一致，用于匹配感受）
+      const totalRatio = selectedFoods.reduce((acc, food) => {
+        acc.grains += food.ratio.grains;
+        acc.vegetables += food.ratio.vegetables;
+        acc.protein += food.ratio.protein;
+        acc.dairy += food.ratio.dairy;
+        acc.fats += food.ratio.fats;
+        return acc;
+      }, { grains: 0, vegetables: 0, protein: 0, dairy: 0, fats: 0 });
+      
+      const total = totalRatio.grains + totalRatio.vegetables + totalRatio.protein + totalRatio.dairy + totalRatio.fats;
+      const fatPercentage = (totalRatio.fats / total) * 100;
+      const proteinPercentage = (totalRatio.protein / total) * 100;
+      const carbPercentage = (totalRatio.grains / total) * 100;
+      const vegPercentage = (totalRatio.vegetables / total) * 100;
+      
+      let feelingType = 'balanced'; // 默认：均衡
+      
+      // 确定感受类型
+      if (fatPercentage > 30) feelingType = 'highFat';
+      else if (proteinPercentage > 40) feelingType = 'highProtein';
+      else if (carbPercentage > 40) feelingType = 'highCarbs';
+      else if (vegPercentage > 40) feelingType = 'highVeggie';
+      
+      // 随机选择一个感受文本
+      const randomFeeling = feelings[feelingType][Math.floor(Math.random() * feelings[feelingType].length)];
+      
+      // 更新感受显示，添加背景闪烁动画
+      feelingElement.innerHTML = `<p class="text-gray-700 text-lg">${randomFeeling}</p>`;
+      feelingElement.classList.add('bg-blue-50');
+      setTimeout(() => {
+        feelingElement.classList.remove('bg-blue-50');
+      }, 1000);
+    }
+    
+    // 启用重置按钮：选满5个后激活按钮，添加点击事件
+    function enableResetButton() {
+      resetBtn.classList.remove('opacity-50', 'cursor-not-allowed'); // 移除禁用样式
+      resetBtn.classList.add('hover:scale-105'); // 添加悬停缩放效果
+      
+      resetBtn.addEventListener('click', resetGame); // 绑定重置事件
+    }
+    
+    // 重置游戏：恢复初始状态
+    function resetGame() {
+      selectedFoods = []; // 清空已选食物
+      updateSelectedCount(); // 更新计数
+      
+      // 重置男孩状态
+      const boy = document.getElementById('boy');
+      boy.style.transform = 'scale(1)';
+      boy.style.backgroundImage = "url('https://picsum.photos/id/237/300/400')";
+      
+      // 重置感受显示
+      feelingElement.innerHTML = '<p class="text-gray-600">等待投喂...</p>';
+      
+      // 重置按钮状态（禁用）
+      resetBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      resetBtn.classList.remove('hover:scale-105');
+      resetBtn.removeEventListener('click', resetGame);
+      
+      // 销毁营养图表
+      if (nutritionChart) {
+        nutritionChart.destroy();
+        nutritionChart = null;
+      }
+      
+      // 清空食物动画区域
+      plateArea.innerHTML = '';
+      
+      // 重新启用所有食物拖拽
+      document.querySelectorAll('.drag-item').forEach(el => {
+        el.draggable = true;
+        el.classList.add('cursor-grab', 'active:cursor-grabbing', 'hover:scale-105');
+        el.classList.remove('opacity-70', 'border-primary', 'bg-blue-50');
+        el.classList.add('hover:border-primary');
+      });
+    }
+    
+    // 初始化函数：页面加载后执行
+    function init() {
+      initFoods(); // 初始化食物列表
+      initDropZone(); // 初始化拖拽目标区域
+    }
+    
+    // 页面加载完成后初始化
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
