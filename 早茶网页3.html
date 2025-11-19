@@ -350,15 +350,15 @@
       
       const boy = document.getElementById('boy');
       
-      if (fatPercentage > 30) {
+if (fatPercentage > 10) {
         boyState = 'fat';
         boy.style.transform = 'scale(1.1)';
         boy.style.backgroundImage = "url('./boy/fat.png')";
-      } else if (proteinPercentage > 40) {
+      } else if (proteinPercentage > 30) {
         boyState = 'muscular';
         boy.style.transform = 'scale(1.05)';
         boy.style.backgroundImage = "url('./boy/muscular.png')";
-      } else if (vegPercentage > 40) {
+      } else if (vegPercentage > 30) {
         boyState = 'slim';
         boy.style.transform = 'scale(0.95)';
         boy.style.backgroundImage = "url('./boy/slim.png')";
@@ -520,4 +520,5 @@ nutritionChart = new Chart(ctx, {
     window.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
+
 </html>
