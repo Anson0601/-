@@ -460,10 +460,10 @@ nutritionChart = new Chart(ctx, {
       
       let feelingType = 'balanced';
       
-      if (fatPercentage > 30) feelingType = 'highFat';
-      else if (proteinPercentage > 40) feelingType = 'highProtein';
-      else if (carbPercentage > 40) feelingType = 'highCarbs';
-      else if (vegPercentage > 40) feelingType = 'highVeggie';
+      if (fatPercentage > 10) feelingType = 'highFat';
+      else if (proteinPercentage > 30) feelingType = 'highProtein';
+      else if (carbPercentage > 30) feelingType = 'highCarbs';
+      else if (vegPercentage > 30) feelingType = 'highVeggie';
       
       const randomFeeling = feelings[feelingType][Math.floor(Math.random() * feelings[feelingType].length)];
       
@@ -522,3 +522,4 @@ nutritionChart = new Chart(ctx, {
 </body>
 
 </html>
+
