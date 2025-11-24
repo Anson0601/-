@@ -139,24 +139,24 @@
   <script>
     // 食物数据
     const foods = [
-      { id: 1, name: '红米肠', image: './image1/红米肠.png', category: '谷物', ratio: { water: 0, grains: 47.6, vegetables: 14.3, protein: 33.3, dairy: 0, fats: 4.8 } },
-      { id: 2, name: '水晶虾饺', image: './image1/虾饺.png', category: '蛋白质', ratio: { water: 0, grains: 27.6, vegetables: 13.8, protein: 55.2, dairy: 0, fats: 3.4 } },
-      { id: 3, name: '鲜虾干蒸', image: './image1/干蒸.png', category: '蔬菜', ratio: { water: 0, grains: 25.8, vegetables: 19.4, protein: 51.6, dairy: 0, fats: 3.2 } },
-      { id: 4, name: '芋头蒸排骨', image: './image2/芋头排骨.png', category: '乳制品', ratio: { water: 0, grains: 33.3, vegetables: 14.3, protein: 47.6, dairy: 0, fats: 4.8 } },
-      { id: 5, name: '凤爪', image: './image2/凤爪.png', category: '蛋白质', ratio: { water: 0, grains: 6.1, vegetables: 3, protein: 60.6, dairy: 6.1, fats: 24.2 } },
-      { id: 6, name: '糯米鸡', image: './image2/糯米鸡.png', category: '蛋白质', ratio: { water: 0, grains: 50, vegetables: 12.5, protein: 29.2, dairy: 4.2, fats: 4.2 } },
-      { id: 7, name: '陈皮牛肉丸', image: './image3/陈皮牛肉丸.png', category: '水果', ratio: { water: 0, grains: 14.3, vegetables: 21.4, protein: 57.1, dairy: 0, fats: 7.1 } },
-      { id: 8, name: '肠粉', image: './image3/肠粉.png', category: '谷物', ratio: { water: 28.1, grains: 42.1, vegetables: 10.5, protein: 17.5, dairy: 0, fats: 1.8 } },
-      { id: 9, name: '艇仔粥', image: './image3/艇仔粥.png', category: '蛋白质', ratio: { water: 31.7, grains: 38.1, vegetables: 9.5, protein: 15.9, dairy: 3.2, fats: 1.6 } },
-      { id: 10, name: '白灼菜心', image: './image4/白灼菜心.png', category: '蛋白质', ratio: { water: 10.8, grains: 0, vegetables: 86.5, protein: 0, dairy: 0, fats: 2.7 } },
-      { id: 11, name: '白灼芥兰', image: './image4/白灼芥蓝.png', category: '谷物', ratio: { water: 10.8, grains: 0, vegetables: 86.5, protein: 0, dairy: 0, fats: 2.7 } },
-      { id: 12, name: '三丝炒面', image: './image4/三丝炒面.png', category: '水果', ratio: { water: 0, grains: 52.2, vegetables: 21.7, protein: 21.7, dairy: 0, fats: 4.3 } },
-      { id: 13, name: '蛋挞', image: './image5/蛋挞.png', category: '谷物', ratio: { water: 0, grains: 28.6, vegetables: 0, protein: 14.3, dairy: 33.3, fats: 23.8 } },
-      { id: 14, name: '黄金糕', image: './image5/黄金糕.png', category: '乳制品', ratio: { water: 0, grains: 52.6, vegetables: 0, protein: 15.8, dairy: 15.8, fats: 15.8 } },
-      { id: 15, name: '萝卜糕', image: './image5/萝卜糕.png', category: '蛋白质', ratio: { water: 0, grains: 19.5, vegetables: 58.5, protein: 9.8, dairy: 2.4, fats: 9.8 } },
-      { id: 16, name: '菠萝包', image: './image6/菠萝包.png', category: '蔬菜', ratio: { water: 9.1, grains: 45.5, vegetables: 0, protein: 18.2, dairy: 13.6, fats: 13.6 } },
-      { id: 17, name: '叉烧包', image: './image6/叉烧包.png', category: '脂肪', ratio: { water: 25, grains: 50, vegetables: 0, protein: 20, dairy: 0, fats: 5 } },
-      { id: 18, name: '豆浆', image: './image6/豆浆.png', category: '混合', ratio: { water: 78.6, grains: 3.6, vegetables: 0, protein: 0, dairy: 17.9, fats: 0 } }
+      { id: 1, name: '红米肠', image: './image1/红米肠.jpg', category: '谷物', ratio: { water: 0, grains: 47.6, vegetables: 14.3, protein: 33.3, dairy: 0, fats: 4.8 } },
+      { id: 2, name: '水晶虾饺', image: './image1/虾饺.jpg', category: '蛋白质', ratio: { water: 0, grains: 27.6, vegetables: 13.8, protein: 55.2, dairy: 0, fats: 3.4 } },
+      { id: 3, name: '鲜虾干蒸', image: './image1/干蒸.jpg', category: '蔬菜', ratio: { water: 0, grains: 25.8, vegetables: 19.4, protein: 51.6, dairy: 0, fats: 3.2 } },
+      { id: 4, name: '芋头蒸排骨', image: './image2/芋头排骨.jpg', category: '乳制品', ratio: { water: 0, grains: 33.3, vegetables: 14.3, protein: 47.6, dairy: 0, fats: 4.8 } },
+      { id: 5, name: '凤爪', image: './image2/凤爪.jpg', category: '蛋白质', ratio: { water: 0, grains: 6.1, vegetables: 3, protein: 60.6, dairy: 6.1, fats: 24.2 } },
+      { id: 6, name: '糯米鸡', image: './image2/糯米鸡.jpg', category: '蛋白质', ratio: { water: 0, grains: 50, vegetables: 12.5, protein: 29.2, dairy: 4.2, fats: 4.2 } },
+      { id: 7, name: '陈皮牛肉丸', image: './image3/陈皮牛肉丸.jpg', category: '水果', ratio: { water: 0, grains: 14.3, vegetables: 21.4, protein: 57.1, dairy: 0, fats: 7.1 } },
+      { id: 8, name: '肠粉', image: './image3/肠粉.jpg', category: '谷物', ratio: { water: 28.1, grains: 42.1, vegetables: 10.5, protein: 17.5, dairy: 0, fats: 1.8 } },
+      { id: 9, name: '艇仔粥', image: './image3/艇仔粥.jpg', category: '蛋白质', ratio: { water: 31.7, grains: 38.1, vegetables: 9.5, protein: 15.9, dairy: 3.2, fats: 1.6 } },
+      { id: 10, name: '白灼菜心', image: './image4/白灼菜心.jpg', category: '蛋白质', ratio: { water: 10.8, grains: 0, vegetables: 86.5, protein: 0, dairy: 0, fats: 2.7 } },
+      { id: 11, name: '白灼芥兰', image: './image4/白灼芥蓝.jpg', category: '谷物', ratio: { water: 10.8, grains: 0, vegetables: 86.5, protein: 0, dairy: 0, fats: 2.7 } },
+      { id: 12, name: '三丝炒面', image: './image4/三丝炒面.jpg', category: '水果', ratio: { water: 0, grains: 52.2, vegetables: 21.7, protein: 21.7, dairy: 0, fats: 4.3 } },
+      { id: 13, name: '蛋挞', image: './image5/蛋挞.jpg', category: '谷物', ratio: { water: 0, grains: 28.6, vegetables: 0, protein: 14.3, dairy: 33.3, fats: 23.8 } },
+      { id: 14, name: '黄金糕', image: './image5/黄金糕.jpg', category: '乳制品', ratio: { water: 0, grains: 52.6, vegetables: 0, protein: 15.8, dairy: 15.8, fats: 15.8 } },
+      { id: 15, name: '萝卜糕', image: './image5/萝卜糕.jpg', category: '蛋白质', ratio: { water: 0, grains: 19.5, vegetables: 58.5, protein: 9.8, dairy: 2.4, fats: 9.8 } },
+      { id: 16, name: '菠萝包', image: './image6/菠萝包.jpg', category: '蔬菜', ratio: { water: 9.1, grains: 45.5, vegetables: 0, protein: 18.2, dairy: 13.6, fats: 13.6 } },
+      { id: 17, name: '叉烧包', image: './image6/叉烧包.jpg', category: '脂肪', ratio: { water: 25, grains: 50, vegetables: 0, protein: 20, dairy: 0, fats: 5 } },
+      { id: 18, name: '豆浆', image: './image6/豆浆.jpg', category: '混合', ratio: { water: 78.6, grains: 3.6, vegetables: 0, protein: 0, dairy: 17.9, fats: 0 } }
     ];
     
     // 感受数据
@@ -262,13 +262,17 @@
     
     // 处理提交逻辑
     function handleSubmit() {
+      // 获取boy-container的内部尺寸（关键：用offsetWidth/Height获取容器内尺寸）
+      const containerWidth = boyContainer.offsetWidth;
+      const containerHeight = boyContainer.offsetHeight;
+      
       // 播放食物动画
       selectedFoods.forEach((food, index) => {
         setTimeout(() => {
-          const boyRect = boyContainer.getBoundingClientRect();
-          const x = boyRect.left + boyRect.width / 2 + (index - 2) * 30; // 分散位置
-          const y = boyRect.top + boyRect.height + 20;
-          createFoodAnimation(x, y, food.id);
+          // 初始位置：容器下方居中，分散小距离
+          const startX = containerWidth / 2 + (index - 2) * 15;
+          const startY = containerHeight + 20;
+          createFoodAnimation(startX, startY, food.id);
         }, index * 150);
       });
       
@@ -284,17 +288,14 @@
       }, selectedFoods.length * 150 + 800);
     }
     
-    // 创建食物动画
-    function createFoodAnimation(x, y, foodId) {
+    // 创建食物动画（核心修复：基于容器的相对定位，而非视口）
+    function createFoodAnimation(startX, startY, foodId) {
       const plate = document.createElement('div');
       plate.className = 'plate-item';
       
-      const rect = boyContainer.getBoundingClientRect();
-      const left = x - rect.left - 32;
-      const top = y - rect.top - 32;
-      
-      plate.style.left = `${left}px`;
-      plate.style.top = `${top}px`;
+      // 初始位置：相对于boy-container的坐标
+      plate.style.left = `${startX}px`;
+      plate.style.top = `${startY}px`;
       
       const foodImg = document.querySelector(`[data-id="${foodId}"] img`).src;
       plate.innerHTML = `<img src="${foodImg}" alt="食物" class="w-10 h-10 rounded-full object-cover">`;
@@ -307,14 +308,14 @@
       }, 10);
       
       setTimeout(() => {
-        const boyRect = document.getElementById('boy').getBoundingClientRect();
-        const targetX = boyRect.width / 2 - 16;
-        const targetY = boyRect.height / 3 - 16;
+        // 目标位置：boy-container内部的中间偏上（相对于容器）
+        const targetX = boyContainer.offsetWidth / 2 - 16; // 容器宽度一半 - 食物宽度一半
+        const targetY = boyContainer.offsetHeight * 0.35 - 16; // 容器高度35%位置（中间偏上）
         
         plate.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
         plate.style.left = `${targetX}px`;
         plate.style.top = `${targetY}px`;
-        plate.style.scale = '0.6';
+        plate.style.scale = '0.7';
         
         setTimeout(() => {
           plate.style.opacity = '0';
@@ -361,19 +362,19 @@
       if (fatPercentage > 10) {
         boyState = 'fat';
         boy.style.transform = 'scale(1.1)';
-        boy.style.backgroundImage = "url('./boy/fat.png')";
+        boy.style.backgroundImage = "url('./boy/fat.jpg')";
       } else if (proteinPercentage > 30) {
         boyState = 'muscular';
         boy.style.transform = 'scale(1.05)';
-        boy.style.backgroundImage = "url('./boy/muscular.png')";
+        boy.style.backgroundImage = "url('./boy/muscular.jpg')";
       } else if (vegPercentage > 30) {
         boyState = 'slim';
         boy.style.transform = 'scale(0.95)';
-        boy.style.backgroundImage = "url('./boy/slim.png')";
+        boy.style.backgroundImage = "url('./boy/slim.jpg')";
       } else {
         boyState = 'normal';
         boy.style.transform = 'scale(1)';
-        boy.style.backgroundImage = "url('./boy/normal.png')";
+        boy.style.backgroundImage = "url('./boy/normal.jpg')";
       }
     }
     
