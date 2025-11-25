@@ -177,7 +177,15 @@
       { id: 16, name: '菠萝包', image: './image6/菠萝包.jpg', category: '蔬菜', ratio: { water: 9.1, grains: 45.5, vegetables: 0, protein: 18.2, dairy: 13.6, fats: 13.6 } },
       { id: 17, name: '叉烧包', image: './image6/叉烧包.jpg', category: '脂肪', ratio: { water: 25, grains: 50, vegetables: 0, protein: 20, dairy: 0, fats: 5 } },
       { id: 18, name: '豆浆', image: './image6/豆浆.jpg', category: '混合', ratio: { water: 78.6, grains: 3.6, vegetables: 0, protein: 0, dairy: 17.9, fats: 0 } }
-    ]
+    ];
+    
+    // 男孩状态图片
+    const boyImages = {
+      normal: './boy/normal.png',
+      fat: './boy/fat.jpg',
+      muscular: './boy/muscular.jpg',
+      slim: './boy/slim.jpg'
+    };
     
     // 感受数据
     const feelings = {
@@ -272,11 +280,9 @@
       if (selectedFoods.length === 5) {
         submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
         submitBtn.classList.add('hover:scale-105');
-        submitBtn.addEventListener('click', handleSubmit);
       } else {
         submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
         submitBtn.classList.remove('hover:scale-105');
-        submitBtn.removeEventListener('click', handleSubmit);
       }
     }
     
@@ -329,8 +335,8 @@
       
       setTimeout(() => {
         // 目标位置：boy-container内部的中间偏上
-        const targetX = boyContainer.offsetWidth / 2 - 16;
-        const targetY = boyContainer.offsetHeight * 0.35 - 16;
+        const targetX = boyContainer.offsetWidth / 2 - 25;
+        const targetY = boyContainer.offsetHeight * 0.35 + 20;
         
         plate.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
         plate.style.left = `${targetX}px`;
@@ -382,19 +388,19 @@
       if (fatPercentage > 10) {
         boyState = 'fat';
         boy.style.transform = 'scale(1.1)';
-        boy.style.backgroundImage = "url('./boy/fat.jpg')";
+        boy.style.backgroundImage = `url('${boyImages.fat}')`;
       } else if (proteinPercentage > 30) {
         boyState = 'muscular';
         boy.style.transform = 'scale(1.05)';
-        boy.style.backgroundImage = "url('./boy/muscular.jpg')";
+        boy.style.backgroundImage = `url('${boyImages.muscular}')`;
       } else if (vegPercentage > 30) {
         boyState = 'slim';
         boy.style.transform = 'scale(0.95)';
-        boy.style.backgroundImage = "url('./boy/slim.jpg')";
+        boy.style.backgroundImage = `url('${boyImages.slim}')`;
       } else {
         boyState = 'normal';
         boy.style.transform = 'scale(1)';
-        boy.style.backgroundImage = "url('./boy/normal.jpg')";
+        boy.style.backgroundImage = `url('${boyImages.normal}')`;
       }
     }
     
@@ -528,30 +534,38 @@
       
       feelingElement.innerHTML = '<p class="text-gray-600 text-sm">等待投喂...</p>';
       
+      // 重置按钮状态
       resetBtn.classList.add('opacity-50', 'cursor-not-allowed');
       resetBtn.classList.remove('hover:scale-105');
       resetBtn.removeEventListener('click', resetGame);
       
+      // 销毁图表
       if (nutritionChart) {
         nutritionChart.destroy();
         nutritionChart = null;
       }
       
+      // 清空食物动画
       plateArea.innerHTML = '';
       
+      // 启用食物选择
       document.querySelectorAll('.click-item').forEach(el => {
         el.classList.add('cursor-pointer', 'hover:scale-105');
         el.classList.remove('opacity-70', 'border-primary', 'bg-blue-50');
         el.style.pointerEvents = 'auto';
       });
       
+      // 重置提交按钮
       submitBtn.disabled = false;
+      submitBtn.addEventListener('click', handleSubmit);
     }
     
     // 初始化
     function init() {
       initFoods();
       updateSubmitButton();
+      // 为提交按钮添加点击事件监听
+      submitBtn.addEventListener('click', handleSubmit);
     }
     
     window.addEventListener('DOMContentLoaded', init);
