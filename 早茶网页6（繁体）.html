@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>營養膳食模擬器</title>
+  
+  <!-- 引入外部资源 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  
+  <!-- Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#3B82F6',
+            secondary: '#F97316',
+            neutral: '#F3F4F6',
+            success: '#10B981',
+            warning: '#FBBF24',
+            info: '#06B6D4',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <!-- 自定义工具类 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .click-item {
+        @apply cursor-pointer transition-all duration-300 hover:scale-105;
+      }
+      .plate-item {
+        @apply absolute w-16 h-16 rounded-full bg-white/80 shadow-md flex items-center justify-center transition-all duration-300 opacity-0 scale-90;
+      }
+      .food-shadow {
+        filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
+      }
+      .boy-transition {
+        transition: all 1s ease-in-out;
+      }
+    }
+  </style>
+  
+  <style>
+    body {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    main {
+      flex: 1;
+      overflow-y: auto;
+      padding-top: 1rem !important;
+      padding-bottom: 1rem !important;
+    }
+    footer {
+      margin-top: auto !important;
+      padding-top: 1rem !important;
+      padding-bottom: 1rem !important;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-green-50 font-sans">
+  <!-- 页面标题区域 -->
+  <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 py-2">
+    <div class="container mx-auto px-4 flex flex-col sm:flex-row justify-between items-center">
+      <h1 class="text-[clamp(1.2rem,3vw,1.8rem)] font-bold text-primary flex items-center">
+        <i class="fa fa-cutlery mr-2 text-secondary"></i>
+        美味早茶我會選
+      </h1>
+      <div class="mt-1 sm:mt-0 text-xs text-gray-600">
+        <span class="bg-blue-100 text-primary px-2 py-1 rounded-full flex items-center">
+          <i class="fa fa-info-circle mr-1"></i>
+          選擇5道菜後提交
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4">
+    <!-- 游戏说明卡片 -->
+    <div class="bg-white rounded-xl shadow-md p-3 mb-3 max-w-3xl mx-auto">
+      <p class="text-gray-700 text-center text-sm">選擇下方18道菜品中的任意5道，點擊提交後投喂，觀察他的變化和營養攝入情況！</p>
+      <div id="selected-count" class="text-center mt-1 font-medium text-primary text-sm">
+        已選擇: <span id="count">0</span>/5
+      </div>
+    </div>
+    
+    <!-- 主要交互区域 -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <!-- 左侧：男孩展示区域 -->
+      <div class="lg:col-span-1">
+        <div class="bg-white rounded-2xl shadow-lg p-4 h-full flex flex-col items-center justify-center relative overflow-hidden">
+          <h2 class="text-lg font-semibold text-gray-800 mb-2">我們的智能體朋友</h2>
+          
+          <div id="boy-container" class="relative w-full max-w-xs aspect-square flex items-center justify-center">
+            <div id="boy" class="boy-transition w-36 h-48 bg-contain bg-no-repeat bg-center" style="background-image: url('./boy/normal.png');"></div>
+            <div id="plate-area" class="absolute inset-0 pointer-events-none"></div>
+          </div>
+          
+          <div id="feeling" class="mt-3 bg-neutral rounded-xl p-3 w-full text-center min-h-[60px] flex items-center justify-center">
+            <p class="text-gray-600 text-sm">等待投喂...</p>
+          </div>
+          
+          <button id="reset-btn" class="mt-3 px-4 py-2 bg-primary hover:bg-primary/90 text-white rounded-full transition-all duration-300 flex items-center text-sm opacity-50 cursor-not-allowed">
+            <i class="fa fa-refresh mr-2"></i>
+            重新開始
+          </button>
+        </div>
+      </div>
+      
+      <!-- 右侧：食物選擇和營養分析 -->
+      <div class="lg:col-span-2 space-y-4">
+        <!-- 膳食寶塔分析卡片 -->
+        <div class="bg-white rounded-2xl shadow-lg p-4">
+          <h2 class="text-lg font-semibold text-gray-800 mb-2">膳食營養分析</h2>
+          <div class="h-[180px]">
+            <canvas id="nutrition-chart"></canvas>
+          </div>
+        </div>
+        
+        <!-- 食物選擇區卡片 -->
+        <div class="bg-white rounded-2xl shadow-lg p-4">
+          <h2 class="text-lg font-semibold text-gray-800 mb-2">選擇菜品 (18道)</h2>
+          <div id="food-container" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
+            <!-- 食物项目将通过JS动态生成 -->
+          </div>
+          <!-- 新增提交按钮 -->
+          <div class="mt-4 text-center">
+            <button id="submit-btn" class="px-6 py-2 bg-primary hover:bg-primary/90 text-white rounded-full transition-all duration-300 flex items-center justify-center mx-auto text-sm opacity-50 cursor-not-allowed">
+              <i class="fa fa-check-circle mr-2"></i>
+              提交選擇
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  <!-- 页脚 -->
+  <footer class="bg-gray-800 text-white py-2">
+    <div class="container mx-auto px-4 text-center">
+      <p class="text-xs">小男孩模擬器 &copy; 2025</p>
+    </div>
+  </footer>
+
+  <script>
+    // 食物数据（使用在线图片）
+    const foods = [
+       { id: 1, name: '紅米腸', image: './image1/红米肠.jpg', category: '谷物', ratio: { water: 0, grains: 47.6, vegetables: 14.3, protein: 33.3, dairy: 0, fats: 4.8 } },
+      { id: 2, name: '水晶蝦餃', image: './image1/虾饺.jpg', category: '蛋白質', ratio: { water: 0, grains: 27.6, vegetables: 13.8, protein: 55.2, dairy: 0, fats: 3.4 } },
+      { id: 3, name: '鮮蝦幹蒸', image: './image1/干蒸.jpg', category: '蔬菜', ratio: { water: 0, grains: 25.8, vegetables: 19.4, protein: 51.6, dairy: 0, fats: 3.2 } },
+      { id: 4, name: '芋頭蒸排骨', image: './image2/芋头排骨.jpg', category: '乳制品', ratio: { water: 0, grains: 33.3, vegetables: 14.3, protein: 47.6, dairy: 0, fats: 4.8 } },
+      { id: 5, name: '鳳爪', image: './image2/凤爪.jpg', category: '蛋白質', ratio: { water: 0, grains: 6.1, vegetables: 3, protein: 60.6, dairy: 6.1, fats: 24.2 } },
+      { id: 6, name: '糯米雞', image: './image2/糯米鸡.jpg', category: '蛋白質', ratio: { water: 0, grains: 50, vegetables: 12.5, protein: 29.2, dairy: 4.2, fats: 4.2 } },
+      { id: 7, name: '陳皮牛肉丸', image: './image3/陈皮牛肉丸.jpg', category: '水果', ratio: { water: 0, grains: 14.3, vegetables: 21.4, protein: 57.1, dairy: 0, fats: 7.1 } },
+      { id: 8, name: '腸粉', image: './image3/肠粉.jpg', category: '谷物', ratio: { water: 28.1, grains: 42.1, vegetables: 10.5, protein: 17.5, dairy: 0, fats: 1.8 } },
+      { id: 9, name: '艇仔粥', image: './image3/艇仔粥.jpg', category: '蛋白質', ratio: { water: 31.7, grains: 38.1, vegetables: 9.5, protein: 15.9, dairy: 3.2, fats: 1.6 } },
+      { id: 10, name: '白灼菜心', image: './image4/白灼菜心.jpg', category: '蛋白質', ratio: { water: 10.8, grains: 0, vegetables: 86.5, protein: 0, dairy: 0, fats: 2.7 } },
+      { id: 11, name: '白灼芥蘭', image: './image4/白灼芥蓝.jpg', category: '谷物', ratio: { water: 10.8, grains: 0, vegetables: 86.5, protein: 0, dairy: 0, fats: 2.7 } },
+      { id: 12, name: '三絲炒面', image: './image4/三丝炒面.jpg', category: '水果', ratio: { water: 0, grains: 52.2, vegetables: 21.7, protein: 21.7, dairy: 0, fats: 4.3 } },
+      { id: 13, name: '蛋撻', image: './image5/蛋挞.jpg', category: '谷物', ratio: { water: 0, grains: 28.6, vegetables: 0, protein: 14.3, dairy: 33.3, fats: 23.8 } },
+      { id: 14, name: '黃金糕', image: './image5/黄金糕.jpg', category: '乳制品', ratio: { water: 0, grains: 52.6, vegetables: 0, protein: 15.8, dairy: 15.8, fats: 15.8 } },
+      { id: 15, name: '蘿卜糕', image: './image5/萝卜糕.jpg', category: '蛋白質', ratio: { water: 0, grains: 19.5, vegetables: 58.5, protein: 9.8, dairy: 2.4, fats: 9.8 } },
+      { id: 16, name: '菠蘿包', image: './image6/菠萝包.jpg', category: '蔬菜', ratio: { water: 9.1, grains: 45.5, vegetables: 0, protein: 18.2, dairy: 13.6, fats: 13.6 } },
+      { id: 17, name: '叉燒包', image: './image6/叉烧包.jpg', category: '脂肪', ratio: { water: 25, grains: 50, vegetables: 0, protein: 20, dairy: 0, fats: 5 } },
+      { id: 18, name: '豆漿', image: './image6/豆浆.jpg', category: '混合', ratio: { water: 78.6, grains: 3.6, vegetables: 0, protein: 0, dairy: 17.9, fats: 0 } }
+    ];
+    
+    // 男孩状态图片
+    const boyImages = {
+      normal: './boy/normal.png',
+      fat: './boy/fat.jpg',
+      muscular: './boy/muscular.jpg',
+      slim: './boy/slim.jpg'
+    };
+    
+    // 感受数据
+    const feelings = {
+      balanced: [
+        "太美味了！營養均衡，感觉很健康！",
+        "喫得剛剛好，身體充滿活力！",
+        "這些食物搭配很棒，我感覺很舒服。"
+      ],
+      highProtein: [
+        "好多蛋白質，感覺肌肉都要長出來了！",
+        "全是肉，有點撐但很滿足。",
+        "蛋白質攝入充足，精力充沛！"
+      ],
+      highCarbs: [
+        "碳水好多，有點昏昏欲睡...",
+        "吃了太多主食，肚子有點脹。",
+        "能量滿滿，但需要多吃點蔬菜。"
+      ],
+      highFat: [
+        "好油膩啊，有點不舒服。",
+        "脂肪攝入太多了，感覺身體變沉了。",
+        "這些食物熱量好高，得運動一下了。"
+      ],
+      highVeggie: [
+        "好多蔬菜水果，感覺很清爽！",
+        "維生素充足，皮膚都變好了！",
+        "有點餓，可能需要加點主食。"
+      ]
+    };
+    
+    // 全局变量
+    let selectedFoods = [];
+    let nutritionChart = null;
+    let boyState = 'normal';
+    
+    // DOM 元素
+    const foodContainer = document.getElementById('food-container');
+    const boyContainer = document.getElementById('boy-container');
+    const feelingElement = document.getElementById('feeling');
+    const countElement = document.getElementById('count');
+    const resetBtn = document.getElementById('reset-btn');
+    const submitBtn = document.getElementById('submit-btn');
+    const plateArea = document.getElementById('plate-area');
+    
+    // 初始化食物列表
+    function initFoods() {
+      foods.forEach(food => {
+        const foodEl = document.createElement('div');
+        foodEl.className = 'click-item bg-white rounded-xl shadow p-1 flex flex-col items-center justify-center border-2 border-transparent hover:border-primary transition-all duration-300';
+        foodEl.dataset.id = food.id;
+        
+        foodEl.innerHTML = `
+          <div class="w-12 h-12 rounded-full overflow-hidden mb-1 flex items-center justify-center bg-neutral">
+            <img src="${food.image}" alt="${food.name}" class="w-full h-full object-cover food-shadow">
+          </div>
+          <span class="text-xs font-medium text-gray-700 text-center">${food.name}</span>
+        `;
+        
+        foodEl.addEventListener('click', handleFoodClick);
+        foodContainer.appendChild(foodEl);
+      });
+    }
+    
+    // 處理食物點擊選擇
+    function handleFoodClick(e) {
+      const foodEl = e.target.closest('[data-id]');
+      if (!foodEl) return;
+      
+      const foodId = parseInt(foodEl.dataset.id);
+      const food = foods.find(f => f.id === foodId);
+      const isSelected = selectedFoods.some(f => f.id === foodId);
+      
+      if (isSelected) {
+        // 取消選中
+        selectedFoods = selectedFoods.filter(f => f.id !== foodId);
+        foodEl.classList.remove('border-primary', 'bg-blue-50');
+        foodEl.classList.add('hover:border-primary');
+      } else {
+        // 最多選5個
+        if (selectedFoods.length >= 5) return;
+        selectedFoods.push(food);
+        foodEl.classList.add('border-primary', 'bg-blue-50');
+        foodEl.classList.remove('hover:border-primary');
+      }
+      
+      updateSelectedCount();
+      updateSubmitButton();
+    }
+    
+    // 更新提交按鈕狀態
+    function updateSubmitButton() {
+      if (selectedFoods.length === 5) {
+        submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        submitBtn.classList.add('hover:scale-105');
+      } else {
+        submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        submitBtn.classList.remove('hover:scale-105');
+      }
+    }
+    
+    // 處理提交邏輯
+    function handleSubmit() {
+      // 获取boy-container的内部尺寸
+      const containerWidth = boyContainer.offsetWidth;
+      const containerHeight = boyContainer.offsetHeight;
+      
+      // 播放食物动画
+      selectedFoods.forEach((food, index) => {
+        setTimeout(() => {
+          // 初始位置：容器下方居中，分散小距离
+          const startX = containerWidth / 2 + (index - 2) * 15;
+          const startY = containerHeight + 20;
+          createFoodAnimation(startX, startY, food.id);
+        }, index * 150);
+      });
+      
+      // 提交后更新状态
+      setTimeout(() => {
+        updateBoyState();
+        updateNutritionChart();
+        updateFeeling();
+        enableResetButton();
+        disableAllFoods();
+        submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        submitBtn.disabled = true;
+      }, selectedFoods.length * 150 + 800);
+    }
+    
+    // 创建食物动画
+    function createFoodAnimation(startX, startY, foodId) {
+      const plate = document.createElement('div');
+      plate.className = 'plate-item';
+      
+      // 初始位置：相对于boy-container的坐标
+      plate.style.left = `${startX}px`;
+      plate.style.top = `${startY}px`;
+      
+      const foodImg = document.querySelector(`[data-id="${foodId}"] img`).src;
+      plate.innerHTML = `<img src="${foodImg}" alt="食物" class="w-8 h-8 rounded-full object-cover">`;
+      
+      plateArea.appendChild(plate);
+      
+      setTimeout(() => {
+        plate.style.opacity = '1';
+        plate.style.scale = '1';
+      }, 10);
+      
+      setTimeout(() => {
+        // 目标位置：boy-container内部的中间偏上
+        const targetX = boyContainer.offsetWidth / 2 - 25;
+        const targetY = boyContainer.offsetHeight * 0.35 + 20;
+        
+        plate.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        plate.style.left = `${targetX}px`;
+        plate.style.top = `${targetY}px`;
+        plate.style.scale = '0.7';
+        
+        setTimeout(() => {
+          plate.style.opacity = '0';
+          plate.style.scale = '0';
+          setTimeout(() => plate.remove(), 300);
+        }, 500);
+      }, 300);
+    }
+    
+    // 更新选择计数
+    function updateSelectedCount() {
+      countElement.textContent = selectedFoods.length;
+    }
+    
+    // 禁用所有食物选择
+    function disableAllFoods() {
+      document.querySelectorAll('.click-item').forEach(el => {
+        el.classList.remove('cursor-pointer', 'hover:scale-105');
+        el.classList.add('opacity-70');
+        el.style.pointerEvents = 'none';
+      });
+    }
+    
+    // 更新男孩状态
+    function updateBoyState() {
+      const totalRatio = selectedFoods.reduce((acc, food) => {
+        acc.water += food.ratio.water;
+        acc.grains += food.ratio.grains;
+        acc.vegetables += food.ratio.vegetables;
+        acc.protein += food.ratio.protein;
+        acc.dairy += food.ratio.dairy;
+        acc.fats += food.ratio.fats;
+        return acc;
+      }, { water: 0, grains: 0, vegetables: 0, protein: 0, dairy: 0, fats: 0 });
+      
+      const total = totalRatio.water + totalRatio.grains + totalRatio.vegetables + totalRatio.protein + totalRatio.dairy + totalRatio.fats;
+      const fatPercentage = (totalRatio.fats / total) * 100;
+      const proteinPercentage = (totalRatio.protein / total) * 100;
+      const carbPercentage = (totalRatio.grains / total) * 100;
+      const vegPercentage = (totalRatio.vegetables / total) * 100;
+      
+      const boy = document.getElementById('boy');
+      
+      if (fatPercentage > 10) {
+        boyState = 'fat';
+        boy.style.transform = 'scale(1.1)';
+        boy.style.backgroundImage = `url('${boyImages.fat}')`;
+      } else if (proteinPercentage > 30) {
+        boyState = 'muscular';
+        boy.style.transform = 'scale(1.05)';
+        boy.style.backgroundImage = `url('${boyImages.muscular}')`;
+      } else if (vegPercentage > 30) {
+        boyState = 'slim';
+        boy.style.transform = 'scale(0.95)';
+        boy.style.backgroundImage = `url('${boyImages.slim}')`;
+      } else {
+        boyState = 'normal';
+        boy.style.transform = 'scale(1)';
+        boy.style.backgroundImage = `url('${boyImages.normal}')`;
+      }
+    }
+    
+    // 更新营养图表
+    function updateNutritionChart() {
+      const avgRatio = selectedFoods.reduce((acc, food, index, array) => {
+        acc.water += food.ratio.water / array.length;
+        acc.grains += food.ratio.grains / array.length;
+        acc.vegetables += food.ratio.vegetables / array.length;
+        acc.protein += food.ratio.protein / array.length;
+        acc.dairy += food.ratio.dairy / array.length;
+        acc.fats += food.ratio.fats / array.length;
+        
+        return acc;
+      }, { water: 0, grains: 0, vegetables: 0, protein: 0, dairy: 0, fats: 0 });
+      
+      const ctx = document.getElementById('nutrition-chart').getContext('2d');
+      
+      if (nutritionChart) {
+        nutritionChart.destroy();
+      }
+      
+      nutritionChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['油鹽類', '乳製品', '肉類', '蔬果類', '谷薯類', '水類'],
+          datasets: [{
+            label: '營養比例 (%)',
+            data: [avgRatio.fats, avgRatio.dairy, avgRatio.protein, avgRatio.vegetables, avgRatio.grains, avgRatio.water],
+            backgroundColor: [
+              'rgba(254, 155, 28, 0.9)',
+              'rgba(246, 243, 210, 0.9)',
+              'rgba(228, 25, 8, 0.9)',
+              'rgba(77, 214, 12, 0.9)',
+              'rgba(244, 242, 7, 0.9)',
+              'rgba(145, 171, 223, 0.9)'
+            ],
+            borderColor: [
+              'rgb(254, 155, 28)',
+              'rgb(243, 234, 157)',
+              'rgb(228, 25, 8)',
+              'rgb(77, 214, 12)',
+              'rgb(244, 242, 7)',
+              'rgb(145, 171, 223)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          indexAxis: 'y',
+          scales: {
+            x: {
+              beginAtZero: true,
+              max: 100,
+              title: {
+                display: true,
+                text: '比例 (%)',
+                font: { size: 10 }
+              },
+              ticks: { font: { size: 9 } }
+            },
+            y: {
+              ticks: { font: { size: 10 } }
+            }
+          },
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              bodyFont: { size: 10 },
+              titleFont: { size: 11 }
+            }
+          }
+        }
+      });
+    }
+    
+    // 更新感受
+    function updateFeeling() {
+      const totalRatio = selectedFoods.reduce((acc, food) => {
+        acc.water += food.ratio.water;
+        acc.grains += food.ratio.grains;
+        acc.vegetables += food.ratio.vegetables;
+        acc.protein += food.ratio.protein;
+        acc.dairy += food.ratio.dairy;
+        acc.fats += food.ratio.fats;
+        return acc;
+      }, { water: 0, grains: 0, vegetables: 0, protein: 0, dairy: 0, fats: 0 });
+      
+      const total = totalRatio.water + totalRatio.grains + totalRatio.vegetables + totalRatio.protein + totalRatio.dairy + totalRatio.fats;
+      const fatPercentage = (totalRatio.fats / total) * 100;
+      const proteinPercentage = (totalRatio.protein / total) * 100;
+      const carbPercentage = (totalRatio.grains / total) * 100;
+      const vegPercentage = (totalRatio.vegetables / total) * 100;
+      
+      let feelingType = 'balanced';
+      
+      if (fatPercentage > 10) feelingType = 'highFat';
+      else if (proteinPercentage > 30) feelingType = 'highProtein';
+      else if (carbPercentage > 30) feelingType = 'highCarbs';
+      else if (vegPercentage > 30) feelingType = 'highVeggie';
+      
+      const randomFeeling = feelings[feelingType][Math.floor(Math.random() * feelings[feelingType].length)];
+      
+      feelingElement.innerHTML = `<p class="text-gray-700 text-base">${randomFeeling}</p>`;
+      feelingElement.classList.add('bg-blue-50');
+      setTimeout(() => {
+        feelingElement.classList.remove('bg-blue-50');
+      }, 1000);
+    }
+    
+    // 启用重置按钮
+    function enableResetButton() {
+      resetBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      resetBtn.classList.add('hover:scale-105');
+      resetBtn.addEventListener('click', resetGame);
+    }
+    
+    // 重置游戏
+    function resetGame() {
+      selectedFoods = [];
+      updateSelectedCount();
+      updateSubmitButton();
+      
+      const boy = document.getElementById('boy');
+      boy.style.transform = 'scale(1)';
+      boy.style.backgroundImage = `url('${boyImages.normal}')`;
+      
+      feelingElement.innerHTML = '<p class="text-gray-600 text-sm">等待投喂...</p>';
+      
+      // 重置按钮状态
+      resetBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      resetBtn.classList.remove('hover:scale-105');
+      resetBtn.removeEventListener('click', resetGame);
+      
+      // 销毁图表
+      if (nutritionChart) {
+        nutritionChart.destroy();
+        nutritionChart = null;
+      }
+      
+      // 清空食物动画
+      plateArea.innerHTML = '';
+      
+      // 启用食物选择
+      document.querySelectorAll('.click-item').forEach(el => {
+        el.classList.add('cursor-pointer', 'hover:scale-105');
+        el.classList.remove('opacity-70', 'border-primary', 'bg-blue-50');
+        el.style.pointerEvents = 'auto';
+      });
+      
+      // 重置提交按钮
+      submitBtn.disabled = false;
+      submitBtn.addEventListener('click', handleSubmit);
+    }
+    
+    // 初始化
+    function init() {
+      initFoods();
+      updateSubmitButton();
+      // 为提交按钮添加点击事件监听
+      submitBtn.addEventListener('click', handleSubmit);
+    }
+    
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
