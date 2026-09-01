@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metro Shenzhen · APEC 2026 Travel Guide</title>
+<style>
+:root{
+  --bg:#f4f6f9; --card:#ffffff; --line:#dfe4ec; --txt:#1d2733; --sub:#5c6b7d;
+  --accent:#0f6fde; --accent2:#00a3a3; --warn:#e2703a; --ok:#2e9e5b;
+  --shadow:0 1px 3px rgba(20,35,60,.08),0 4px 14px rgba(20,35,60,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",Roboto,sans-serif;font-size:14px}
+header{background:linear-gradient(120deg,#0f6fde,#0aa0b0);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+header .logo{font-size:22px;font-weight:800;letter-spacing:.5px}
+header .sub{opacity:.85;font-size:12.5px}
+.lang-switch{margin-left:auto;display:flex;gap:6px}
+.lang-switch button{border:1px solid rgba(255,255,255,.6);background:transparent;color:#fff;border-radius:14px;padding:4px 14px;cursor:pointer;font-size:13px}
+.lang-switch button.active{background:#fff;color:var(--accent);border-color:#fff;font-weight:700}
+.apec-tag{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);border-radius:14px;padding:4px 12px;font-size:12px}
+main{display:grid;grid-template-columns:400px 1fr;gap:14px;padding:14px;max-width:1600px;margin:0 auto;min-height:calc(100vh - 70px)}
+@media(max-width:1020px){main{grid-template-columns:1fr}}
+.left{display:flex;flex-direction:column;gap:12px}
+.card{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:14px}
+.card h3{font-size:14.5px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.card h3 .num{background:var(--accent);color:#fff;border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-size:11.5px;flex:none}
+.tabs{display:flex;gap:4px;background:#e9edf3;border-radius:10px;padding:4px}
+.tabs button{flex:1;border:none;background:transparent;padding:9px 4px;border-radius:8px;cursor:pointer;font-size:13.5px;font-weight:600;color:var(--sub)}
+.tabs button.active{background:#fff;color:var(--accent);box-shadow:var(--shadow)}
+.panel{display:none}
+.panel.active{display:block}
+label{font-size:12.5px;color:var(--sub);display:block;margin:10px 0 4px}
+select,.searchbox{width:100%;padding:9px 10px;border:1.5px solid var(--line);border-radius:9px;font-size:14px;background:#fff;color:var(--txt);outline:none}
+select:focus,.searchbox:focus{border-color:var(--accent)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:none;border-radius:10px;padding:11px 14px;font-size:14px;font-weight:700;cursor:pointer;color:#fff;background:var(--accent);width:100%}
+.btn.green{background:var(--ok)} .btn.teal{background:var(--accent2)}
+.radio-row{display:flex;gap:8px;margin-top:8px}
+.radio-row label{display:flex;align-items:center;gap:5px;margin:0;padding:6px 10px;border:1.5px solid var(--line);border-radius:8px;cursor:pointer;font-size:13px}
+.radio-row input{accent-color:var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{background:#eef2f7;border:1px solid var(--line);border-radius:14px;padding:5px 11px;font-size:12.5px;cursor:pointer}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+#result{white-space:normal}
+.leg{display:flex;gap:10px;padding:9px 0;border-bottom:1px dashed #e3e8ef;align-items:flex-start}
+.leg:last-child{border-bottom:none}
+.leg .ln{flex:none;min-width:54px;text-align:center;color:#fff;border-radius:8px;padding:6px 4px;font-weight:800;font-size:13px}
+.leg .ln.small{padding:3px 4px;font-size:11.5px;border-radius:6px}
+.leg .tx{flex:1;font-size:13.5px;line-height:1.55}
+.leg .tx b{color:var(--txt)}
+.leg .tx .dim{color:var(--sub);font-size:12.5px}
+.summary{background:#eef7f2;border:1px solid #cfe9da;border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.7;margin-bottom:8px}
+.summary b{color:var(--ok)}
+.poi{display:flex;gap:10px;padding:11px 0;border-bottom:1px solid #eef1f6;cursor:pointer}
+.poi:last-child{border-bottom:none}
+.poi .ico{flex:none;width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px}
+.poi .pt{flex:1}
+.poi .pt .nm{font-weight:700;font-size:14px}
+.poi .pt .d{font-size:12.5px;color:var(--sub);line-height:1.5}
+.poi .tag{font-size:11px;border-radius:6px;padding:1px 7px;margin-left:6px;vertical-align:1px}
+.t-food{background:#fdecec;color:#c43e3e}.t-scenic{background:#e5f3ec;color:#1f8a57}.t-culture{background:#e8effc;color:#2b5fc4}
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px}
+.filter-row button{border:1.5px solid var(--line);background:#fff;border-radius:14px;padding:5px 12px;font-size:12.5px;cursor:pointer;color:var(--sub)}
+.filter-row button.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+#mapwrap{position:relative;background:linear-gradient(180deg,#ffffff,#f7fafd);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;min-height:600px}
+svg{display:block;width:100%;height:auto}
+.stn{cursor:pointer}
+.stn circle{stroke:#fff;stroke-width:2;transition:r .12s}
+.stn:hover circle{stroke:var(--accent)}
+.stn text{font-size:10.5px;fill:#33415a;pointer-events:none}
+.stn.inter text{font-weight:700;font-size:11px}
+.stn .lab{display:none}
+.stn.inter .lab{display:block}
+.stn:hover .lab{display:block}
+.stn:hover .labbg{display:block}
+.labbg{display:none;fill:#fff;stroke:#cfd8e4;rx:3;ry:3}
+.tip{position:absolute;display:none;background:#12202f;color:#fff;border-radius:8px;padding:7px 10px;font-size:12px;max-width:240px;pointer-events:none;z-index:20;line-height:1.5}
+.pop{position:absolute;display:none;background:#fff;border-radius:12px;box-shadow:0 8px 30px rgba(10,25,50,.25);padding:13px 15px;z-index:30;min-width:230px;max-width:300px}
+.pop .pnm{font-weight:800;font-size:15px;margin-bottom:4px}
+.pop .pln{font-size:12px;color:var(--sub);margin-bottom:8px}
+.pop .pbtns{display:flex;gap:6px}
+.pop .pbtns button{flex:1;border:none;border-radius:8px;padding:7px 6px;font-size:12px;cursor:pointer;color:#fff}
+.pop .poilist{margin-top:8px;font-size:12.5px;color:var(--sub)}
+.pop .poilist div{padding:2px 0}
+.route-line{stroke-width:7;stroke-linecap:round;stroke-linejoin:round;fill:none;opacity:.85;pointer-events:none}
+.route-node{fill:#fff;stroke-width:3;pointer-events:none}
+.legend{position:absolute;left:10px;top:10px;background:rgba(255,255,255,.92);border-radius:10px;padding:8px 11px;box-shadow:var(--shadow);z-index:5;font-size:11.5px;max-height:70%;overflow:auto;width:170px}
+.legend .l{display:flex;align-items:center;gap:7px;padding:2.5px 0;cursor:pointer}
+.legend .bar{width:20px;height:5px;border-radius:3px;flex:none}
+.legend .off{opacity:.35}
+.mapnote{position:absolute;right:10px;bottom:8px;font-size:11px;color:#8a97a8;z-index:5;background:rgba(255,255,255,.8);border-radius:8px;padding:4px 9px}
+.chatlog{min-height:220px;max-height:340px;overflow-y:auto;font-size:13.5px;line-height:1.6;display:flex;flex-direction:column;gap:8px}
+.msg{max-width:92%;padding:9px 12px;border-radius:12px}
+.msg.u{align-self:flex-end;background:var(--accent);color:#fff;border-bottom-right-radius:3px}
+.msg.a{align-self:flex-start;background:#eef2f7;border-bottom-left-radius:3px}
+.msg .chiprow{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+.msg .chiprow button{background:#fff;border:1.5px solid var(--accent);color:var(--accent);border-radius:14px;padding:4px 10px;font-size:12px;cursor:pointer;font-weight:600}
+.chatbar{display:flex;gap:7px;margin-top:9px}
+.chatbar input{flex:1;border:1.5px solid var(--line);border-radius:20px;padding:9px 14px;font-size:13.5px;outline:none}
+.chatbar input:focus{border-color:var(--accent)}
+.chatbar button{border:none;background:var(--accent);color:#fff;border-radius:20px;padding:0 18px;font-weight:700;cursor:pointer}
+.itin{background:#f8fafc;border:1px solid #e3e9f1;border-radius:11px;padding:11px 13px;margin-bottom:9px;cursor:pointer}
+.itin:hover{border-color:var(--accent)}
+.itin .t{font-weight:800;font-size:13.5px;margin-bottom:3px}
+.itin .s{font-size:12.5px;color:var(--sub);line-height:1.55}
+.itin .go{margin-top:7px;display:inline-block;background:var(--accent2);color:#fff;font-size:12px;font-weight:700;border-radius:14px;padding:4px 12px}
+.hidden{display:none!important}
+.note{font-size:12px;color:var(--sub);background:#f6f8fb;border-radius:8px;padding:7px 10px;margin-top:9px;line-height:1.55}
+footer{padding:10px 20px 22px;text-align:center;font-size:12px;color:#8a97a8}
+footer b{color:#5c6b7d}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">🚇 MetroShenzhen · APEC 2026</div>
+  <div class="sub" data-i="hdr_sub">Ride the metro to taste Lingnan food, sea & mountain scenery, and 40 years of culture</div>
+  <span class="apec-tag" data-i="hdr_ap">APEC 2026 · Nov · Shenzhen</span>
+  <div class="lang-switch">
+    <button id="lang-en" class="active">EN</button>
+    <button id="lang-zh">中文</button>
+  </div>
+</header>
+<main>
+  <div class="left">
+    <div class="card">
+      <div class="tabs">
+        <button data-tab="route" class="active" data-i="tab_route">🚉 Trip Planner</button>
+        <button data-tab="explore" data-i="tab_explore">🍜 Explore</button>
+        <button data-tab="ask" data-i="tab_ask">🤖 Ask Guide</button>
+      </div>
+
+      <!-- ===== TRIP PLANNER ===== -->
+      <div class="panel active" id="panel-route">
+        <label data-i="lb_from">From (station)</label>
+        <input id="from" class="searchbox" placeholder="e.g. Futian Checkpoint / 福田口岸" autocomplete="off">
+        <label data-i="lb_to">To (station or attraction)</label>
+        <input id="to" class="searchbox" placeholder="e.g. Dameisha Beach / 大梅沙" autocomplete="off">
+        <div class="chips" id="quickFrom"></div>
+        <div class="radio-row">
+          <label><input type="radio" name="mode" value="fast" checked> <span data-i="mode_fast">Fastest</span></label>
+          <label><input type="radio" name="mode" value="less"> <span data-i="mode_less">Fewer transfers</span></label>
+        </div>
+        <div style="height:9px"></div>
+        <button class="btn" id="goBtn" data-i="go_btn">🚀 Plan My Route</button>
+        <div id="result"></div>
+        <div class="note" data-i="planner_note">Tip: tap any station on the map to set start / destination, or to see nearby attractions.</div>
+      </div>
+
+      <!-- ===== EXPLORE ===== -->
+      <div class="panel" id="panel-explore">
+        <div class="filter-row" id="filters">
+          <button data-f="all" class="on" data-i="f_all">All</button>
+          <button data-f="food" data-i="f_food">🍜 Lingnan Food</button>
+          <button data-f="scenic" data-i="f_scenic">🏞️ Scenery</button>
+          <button data-f="culture" data-i="f_culture">🏛️ Culture</button>
+        </div>
+        <div id="poilist"></div>
+      </div>
+
+      <!-- ===== ASK GUIDE ===== -->
+      <div class="panel" id="panel-ask">
+        <div class="chatlog" id="chatlog"></div>
+        <div class="chatbar">
+          <input id="chatIn" placeholder="e.g. Where can I eat dim sum?" data-i="chat_ph">
+          <button id="chatSend">➤</button>
+        </div>
+        <div class="chips" id="quickQs" style="margin-top:8px"></div>
+        <div class="note" id="askNote"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="num">★</span><span data-i="itin_title">APEC One-Day Itineraries</span></h3>
+      <div id="itins"></div>
+    </div>
+  </div>
+
+  <div id="mapwrap">
+    <div class="legend" id="legend"></div>
+    <div id="mapSvg"></div>
+    <div class="mapnote" data-i="map_note">Schematic map · tap stations</div>
+    <div class="tip" id="tip"></div>
+    <div class="pop" id="pop"></div>
+  </div>
+</main>
+<footer><b data-i="ft1">MetroShenzhen · APEC 2026 Travel Guide</b> &nbsp;|&nbsp; <span data-i="ft2">Data: 17 lines · 452 stations (Jun 2026). Times & fares are estimates. Map is schematic, not to scale.</span></footer>
+
+<script>
+"use strict";
+/* ================= LINE DATA (official, Jun 2026) ================= */
+const LINES=[
+{id:"L1",zh:"1号线",en:"Line 1",color:"#00A650",stations:["罗湖","国贸","老街","大剧院","科学馆","华强路","岗厦","会展中心","购物公园","香蜜湖","车公庙","竹子林","侨城东","华侨城","世界之窗","白石洲","高新园","深大","桃园","大新","鲤鱼门","前海湾","新安","宝安中心","宝体","坪洲","西乡","固戍","后瑞","机场东"]},
+{id:"L2",zh:"2号线",en:"Line 2",color:"#F26D21",stations:["赤湾","蛇口港","海上世界","水湾","东角头","湾厦","海月","登良","后海","科苑","红树湾","世界之窗","侨城北","深康","安托山","侨香","香蜜","香梅北","景田","莲花西","福田","市民中心","岗厦北","华强北","燕南","大剧院","湖贝","黄贝岭","新秀","莲塘口岸","仙湖路","莲塘"]},
+{id:"L8",zh:"8号线",en:"Line 8",color:"#F26D21",stations:["梧桐山南","沙头角","海山","盐田港西","深外高中","盐田路","鸿安围","盐田墟","大梅沙","小梅沙","溪涌"],through:["莲塘"]},
+{id:"L3",zh:"3号线",en:"Line 3",color:"#00A8E3",stations:["福保","益田","石厦","购物公园","福田","少年宫","莲花村","华新","通新岭","红岭","老街","晒布","翠竹","田贝","水贝","草埔","布吉","木棉湾","大芬","丹竹头","六约","塘坑","横岗","永湖","荷坳","大运","爱联","吉祥","龙城广场","南联","双龙","梨园","新生","坪西","低碳城","白石塘","富坪","坪地六联"]},
+{id:"L4",zh:"4号线",en:"Line 4",color:"#E4002B",stations:["福田口岸","福民","会展中心","市民中心","少年宫","莲花北","上梅林","民乐","白石龙","深圳北站","红山","上塘","龙胜","龙华","清湖","清湖北","竹村","茜坑","长湖","观澜","松元厦","观澜湖","牛湖"]},
+{id:"L5",zh:"5号线",en:"Line 5",color:"#7C4D9E",stations:["赤湾","荔湾","铁路公园","妈湾","前湾公园","前湾","桂湾","前海湾","临海","宝华","宝安中心","翻身","灵芝","洪浪北","兴东","留仙洞","西丽","学城","塘朗","长岭陂","深圳北","民治","五和","坂田","杨美","上水径","下水径","长龙","布吉","百鸽笼","布心","太安","怡景","黄贝岭","湖贝","东门","大剧院"]},
+{id:"L6",zh:"6号线",en:"Line 6",color:"#2FBF8F",stations:["科学馆","通新岭","体育中心","八卦岭","银湖","翰岭","梅林关","深圳北","红山","上芬","元芬","阳台山东","官田","上屋","长圳","凤凰城","光明大街","光明","科学公园","楼村","红花山","公明广场","合水口","薯田埔","松岗公园","溪头","松岗"]},
+{id:"L6B",zh:"6号线支线",en:"Line 6B",color:"#00B3A5",stations:["深理工","中大","圳美","光明","碧眼","虹桥公园","光明城"]},
+{id:"L7",zh:"7号线",en:"Line 7",color:"#1F57B1",stations:["深大丽湖","北大","西丽湖","西丽","茶光","珠光","龙井","桃源村","深云","安托山","农林","车公庙","上沙","沙尾","石厦","皇岗村","福民","皇岗口岸","赤尾","华强南","华强北","华新","黄木岗","八卦岭","红岭北","笋岗","洪湖","田贝","太安"]},
+{id:"L9",zh:"9号线",en:"Line 9",color:"#8C7A6B",stations:["前湾","梦海","怡海","荔林","南油西","南油","南山书城","深大南","粤海门","高新南","红树湾南","深湾","深圳湾公园","下沙","车公庙","香梅","景田","梅景","下梅林","梅村","上梅林","孖岭","银湖","泥岗","红岭北","园岭","红岭","红岭南","鹿丹村","人民","向西村","文锦"]},
+{id:"L10",zh:"10号线",en:"Line 10",color:"#E86FA5",stations:["福田口岸","福民","岗厦","岗厦北","莲花村","冬瓜岭","孖岭","雅宝","南坑","光雅园","五和","坂田北","贝尔路","华为","岗头","雪象","甘坑","凉帽山","上李朗","木古","华南城","禾花","平湖","双拥街"]},
+{id:"L11",zh:"11号线",en:"Line 11",color:"#932A6B",stations:["红岭南","华强南","福星","岗厦北","福田","车公庙","红树湾南","后海","南山","前海湾","宝安","碧海湾","机场","机场北","福永","桥头","塘尾","马安山","沙井","后亭","松岗","碧头"]},
+{id:"L12",zh:"12号线",en:"Line 12",color:"#B28BE2",stations:["左炮台东","太子湾","海上世界","花果山","四海","南油","南光","南山","桃园","南头古城","中山公园","同乐南","新安公园","灵芝","上川","流塘","宝安客运站","宝田一路","平峦山","西乡桃源","钟屋南","黄田","兴围","机场东","福围","怀德","福永","桥头西","福海西","国展","国展北","海上田园南","海上田园东","蚝乡","沙蚝","沙井古墟","步涌","朗下","松岗"]},
+{id:"L13",zh:"13号线",en:"Line 13",color:"#F57E1F",stations:["深圳湾口岸","人才公园","后海","科苑","粤海门","深大","高新中","高新北","石鼓","留仙洞","百旺","应人石","罗租","石岩","上屋","红坳公园","光明城","德雅路","凤凰城","月亮路","将围","新庄","公明广场","上村","下村","李松蓢"]},
+{id:"L14",zh:"14号线",en:"Line 14",color:"#F4C542",stations:["岗厦北","黄木岗","罗湖北","布吉","石芽岭","六约北","四联","坳背","大运","嶂背","南约","宝龙","锦龙","坪山围","坪山广场","坪山中心","坑梓","沙田"]},
+{id:"L16",zh:"16号线",en:"Line 16",color:"#3A5FA8",stations:["园山西坑","安良","福坑","大康","园山","大安","吉溪","金源","大运","大运中心","龙城公园","黄阁坑","愉园","回龙埔","尚景","盛平","龙园","双龙","新塘围","龙东","宝龙同乐","坪山","新和","六和","坪山围","坪环","东纵纪念馆","沙壆","燕子湖","石井","技术大学","田心"]},
+{id:"L20",zh:"20号线",en:"Line 20",color:"#5ECDC7",stations:["机场北","国展南","国展","国展北","会展城"]}
+];
+/* ================= POINTS OF INTEREST (bilingual) =================
+   z:中文名 e:English c:cat(food/scenic/culture) s:nearest station w:walk min
+   p:price h:hours d:desc-zh de:desc-en x:tip-zh xe:tip-en t:tag-zh te:tag-en ico:emoji */
+const POIS=[
+/* ---- FOOD 岭南美食 ---- */
+{z:"点都德",e:"Dian Dou De (Dim Sum)",c:"food",s:"大剧院",w:6,p:"¥80–150",h:"08:00–22:00",ico:"🥟",
+ d:"老字号广式茶楼，虾饺、红米肠、凤爪样样地道，是体验粤式早茶文化的最佳去处。",
+ de:"Famous Cantonese teahouse: har gow, crispy rice rolls and chicken feet — the best way to experience 'yum cha' culture.",
+ x:"周末早茶人多，建议10:00前到；点一壶菊普慢慢叹。",xe:"Busy on weekends — arrive before 10:00 for a relaxed breakfast.",
+ t:"早茶·点心",te:"dim sum"},
+{z:"陶陶居",e:"Tao Tao Ju",c:"food",s:"深圳湾公园",w:8,p:"¥100–180",h:"10:00–22:00",ico:"🍤",
+ d:"广州百年老字号，坐落欢乐海岸，酥皮水牛奶包是招牌，餐后可沿海边散步。",
+ de:"A 140-year-old Guangzhou institution at OCT Harbour; try the crispy milk buns, then stroll along the bay.",
+ x:"晚上来可看欢乐海岸音乐喷泉。",xe:"Evening visit pairs well with OCT Harbour's fountain show.",
+ t:"粤菜·创意点心",te:"Cantonese"},
+{z:"八合里海记牛肉火锅",e:"Baheli Chaoshan Beef Hotpot",c:"food",s:"华强北",w:8,p:"¥90–150",h:"11:00–23:00",ico:"🍲",
+ d:"深圳最火的潮汕牛肉火锅，现切吊龙、匙柄配沙茶酱，从牛骨汤开始涮。",
+ de:"Shenzhen's hottest Chaoshan beef hotpot: hand-cut cuts (diaolong, shibing) with satay dip.",
+ x:"牛肉丸和手打牛肉丸拼盘必点。",xe:"Don't miss the hand-pounded beef balls.",
+ t:"潮汕·牛肉火锅",te:"hotpot"},
+{z:"沙井蚝",e:"Shajing Oysters",c:"food",s:"沙井古墟",w:10,p:"¥60–150",h:"11:00–21:00",ico:"🦪",
+ d:"千年蚝乡沙井，金蚝、生蚝刺身、蚝豉粥，把珠江口的鲜美一口吃下。",
+ de:"The 1,000-year 'oyster town' of Shajing — grilled oysters, oyster congee and dried-oyster dishes.",
+ x:"冬季(11月-次年3月)是蚝最肥美的季节。",xe:"Oysters are plumpest in winter (Nov–Mar).",
+ t:"生蚝·海味",te:"oysters"},
+{z:"光明乳鸽",e:"Guangming Roast Pigeon",c:"food",s:"凤凰城",w:12,p:"¥70–120",h:"11:00–21:00",ico:"🍗",
+ d:"深圳招牌菜：光明招待所红烧乳鸽皮脆肉嫩，配牛初乳、甜玉米，光明三宝。",
+ de:"Shenzhen's signature dish: crispy roast pigeon at Guangming Guesthouse — one of the city's 'Three Treasures'.",
+ x:"一只鸽子不够，两只起跳。",xe:"One pigeon is never enough — order two.",
+ t:"粤式烧味",te:"roast"},
+{z:"蛇口海鲜街",e:"Shekou Seafood Street",c:"food",s:"东角头",w:10,p:"¥120–300",h:"10:00–23:00",ico:"🦀",
+ d:"渔港边的海鲜排档一条街，即点即煮，蒜蓉粉丝蒸扇贝、椒盐濑尿虾。",
+ de:"Fishery-harbour seafood stalls: pick live seafood, cooked to order (garlic scallops, salt-pepper mantis shrimp).",
+ x:"看鱼缸点菜，先问价格再下单。",xe:"Point at the tank, confirm the price first.",
+ t:"海鲜排档",te:"seafood"},
+{z:"东门町美食街",e:"Dongmen Snack Street",c:"food",s:"老街",w:5,p:"¥30–80",h:"10:00–23:00",ico:"🍡",
+ d:"深圳最热闹的小吃街：烤生蚝、肠粉、糖水、潮汕炸物，边走边吃逛东门老街。",
+ de:"Shenzhen's liveliest snack street: grilled oysters, cheung fun, tong sui and Chaoshan fried bites.",
+ x:"晚上6点后人最多最热闹。",xe:"Livelier after 6 pm.",
+ t:"小吃街",te:"street food"},
+{z:"盐田海鲜街",e:"Yantian Seafood Street",c:"food",s:"盐田墟",w:12,p:"¥100–250",h:"10:00–22:00",ico:"🐟",
+ d:"面朝大海的海鲜街，吃完可沿滨海栈道散步，看大小梅沙海景。",
+ de:"Seafood street by the sea; after dinner, walk the coastal trail toward Dameisha.",
+ x:"海胆蒸蛋和濑尿虾是本地人最爱。",xe:"Locals love sea-urchin egg custard and mantis shrimp.",
+ t:"海鲜·海景",te:"seafood & sea"},
+{z:"向西村鸡煲",e:"Xiangxi Village Chicken Pot",c:"food",s:"向西村",w:4,p:"¥70–130",h:"17:00–03:00",ico:"🍗",
+ d:"深圳夜宵传奇：向西村鸡煲一条街，炭火鸡煲加支竹，越煮越香。",
+ de:"Legendary late-night spot: clay-pot chicken simmered over charcoal with tofu skin — the deeper it cooks, the better.",
+ x:"营业到凌晨3点，适合宵夜。",xe:"Open until 3 am — perfect for a late supper.",
+ t:"夜宵·鸡煲",te:"chicken pot"},
+{z:"公明烧鹅",e:"Gongming Roast Goose",c:"food",s:"公明广场",w:10,p:"¥60–120",h:"11:00–20:00",ico:"🦆",
+ d:"光明另一张美食名片：公明烧鹅皮脆肉香，配梅子酱解腻。",
+ de:"The other Guangming classic: crisp-skin roast goose with plum sauce.",
+ x:"中午卖完即收，尽量午市前往。",xe:"Often sold out by afternoon — go at lunch.",
+ t:"烧鹅",te:"roast goose"},
+{z:"润园四季椰子鸡",e:"Runyuan Coconut Chicken",c:"food",s:"华侨城",w:8,p:"¥90–160",h:"11:00–22:00",ico:"🥥",
+ d:"椰子鸡是深圳独创的名片美食：海南文昌鸡配新鲜椰青水，清甜鲜嫩。",
+ de:"Coconut chicken — a dish invented in Shenzhen: Hainan chicken simmered in fresh coconut water.",
+ x:"先喝汤再吃鸡，竹笙必加。",xe:"Drink the broth first; add bamboo fungus.",
+ t:"椰子鸡·深圳首创",te:"coconut chicken"},
+{z:"甘坑客家小镇美食",e:"Hakka Food at Gankeng",c:"food",s:"甘坑",w:8,p:"¥50–120",h:"10:00–21:00",ico:"🥘",
+ d:"客家盆菜、酿豆腐、盐焗鸡，在三百年的客家古村里吃客家菜。",
+ de:"Hakka dishes (peng cai, stuffed tofu, salt-baked chicken) inside a 300-year-old Hakka village.",
+ x:"小镇免门票，周末有非遗表演。",xe:"Free entry; folk performances on weekends.",
+ t:"客家菜",te:"Hakka cuisine"},
+{z:"潮州菜·南头古城",e:"Chaoshan Cuisine, Nantou",c:"food",s:"南头古城",w:5,p:"¥80–200",h:"11:00–22:00",ico:"🍜",
+ d:"古城里藏着不少潮汕风味：卤鹅、打冷、蚝烙，配一壶功夫茶。",
+ de:"In the old town: braised goose, 'da leng' cold dishes and oyster omelette, with kungfu tea.",
+ x:"蚝烙要现煎才香。",xe:"Order the oyster omelette freshly fried.",
+ t:"潮汕·功夫茶",te:"Chaoshan"},
+{z:"华强北美食",e:"Huaqiangbei Food",c:"food",s:"华强北",w:5,p:"¥40–120",h:"10:00–23:00",ico:"🍜",
+ d:"电子第一街的美食江湖：港式茶餐厅、烧腊、猪肚鸡，快餐与宵夜应有尽有。",
+ de:"Food scene of the electronics capital: HK-style cha chaan teng, siu mei and pork-belly chicken.",
+ x:"逛街买电子产品顺便解决一餐。",xe:"Great for a quick bite between electronics shopping.",
+ t:"茶餐厅·烧腊",te:"cha chaan teng"},
+/* ---- SCENIC 风景 ---- */
+{z:"深圳湾公园",e:"Shenzhen Bay Park",c:"scenic",s:"深圳湾公园",w:0,p:"Free",h:"Open 24h",ico:"🌊",
+ d:"出站即海：13公里滨海栈道，红树林湿地，冬季可看成群候鸟与香港天际线。",
+ de:"Metro exit leads straight to the sea: 13-km coastal boardwalk, mangrove wetlands, winter migratory birds and the HK skyline.",
+ x:"日落时分最美，傍晚看深圳湾大桥亮灯。",xe:"Best at sunset when the Shenzhen Bay Bridge lights up.",
+ t:"海·红树林·候鸟",te:"sea & mangroves"},
+{z:"人才公园",e:"Talent Park",c:"scenic",s:"人才公园",w:6,p:"Free",h:"Open 24h",ico:"🌃",
+ d:"深圳最网红的海边公园，'春笋'大楼与后海CBD倒映湖中，夜景灯光秀。",
+ de:"Shenzhen's most Instagrammed park: the 'Spring Bamboo' tower and Houhai CBD mirrored in the lake, nightly light show.",
+ x:"夜景最佳机位在湖边栈道。",xe:"Best night shots from the lakeside boardwalk.",
+ t:"夜景·打卡",te:"night view"},
+{z:"莲花山公园",e:"Lianhuashan Park",c:"scenic",s:"少年宫",w:8,p:"Free",h:"Open 24h",ico:"🌳",
+ d:"市中心的山顶公园，邓小平雕像前俯瞰福田CBD全景，风筝广场放风筝。",
+ de:"City-centre hilltop park: panorama of Futian CBD from the Deng Xiaoping statue; kite-flying plaza.",
+ x:"傍晚登山看城市日落。",xe:"Hike up before sunset for the skyline view.",
+ t:"城市全景",te:"city view"},
+{z:"大梅沙海滨公园",e:"Dameisha Beach",c:"scenic",s:"大梅沙",w:10,p:"Free",h:"07:00–22:00",ico:"🏖️",
+ d:"深圳最受欢迎的海滨浴场，金色沙滩配山海栈道，可远眺东部华侨城。",
+ de:"Shenzhen's favourite beach: golden sand, coastal trails and views of OCT East.",
+ x:"夏季旺季需预约；建议工作日早上去。",xe:"Book ahead in summer; go on a weekday morning.",
+ t:"海滩",te:"beach"},
+{z:"小梅沙海洋世界",e:"Xiaomeisha Ocean World",c:"scenic",s:"小梅沙",w:8,p:"¥80–160",h:"09:00–18:00",ico:"🐬",
+ d:"海豚表演、海底隧道、极地馆，山海之间的海洋主题公园。",
+ de:"Dolphin shows, underwater tunnel and polar exhibits, set between mountain and sea.",
+ x:"与盐田海鲜街、大梅沙可连成一日游。",xe:"Combine with Yantian seafood street and Dameisha for a day trip.",
+ t:"海洋公园",te:"ocean park"},
+{z:"东部华侨城",e:"OCT East",c:"scenic",s:"大梅沙",w:20,p:"¥150–250",h:"09:30–18:00",ico:"🎡",
+ d:"山海之间的大型度假区：大侠谷的激流勇进、茶溪谷的花田与欧式小镇。",
+ de:"Huge mountain-and-sea resort: thrill rides in Knight Valley, flower fields in Tea Stream Valley.",
+ x:"从大梅沙站打车约10分钟。",xe:"A 10-min taxi from Dameisha station.",
+ t:"主题乐园·山海",te:"resort"},
+{z:"世界之窗",e:"Window of the World",c:"scenic",s:"世界之窗",w:3,p:"¥220",h:"09:00–22:30",ico:"🗼",
+ d:"把埃菲尔铁塔、金字塔、悉尼歌剧院装进一个公园，晚上有大型歌舞晚会。",
+ de:"Eiffel Tower, pyramids and Sydney Opera House in one park; grand evening show.",
+ x:"夜场票便宜一半，灯光更美。",xe:"Evening tickets are half price and the lights are magical.",
+ t:"微缩景观",te:"mini world"},
+{z:"欢乐谷",e:"Happy Valley",c:"scenic",s:"世界之窗",w:5,p:"¥230",h:"10:00–21:00",ico:"🎢",
+ d:"大型主题乐园，过山车、跳楼机、玛雅水公园，年轻人必打卡。",
+ de:"Major theme park: roller coasters, drop towers and a Maya water park.",
+ x:"工作日人少排队短。",xe:"Shorter queues on weekdays.",
+ t:"主题乐园",te:"theme park"},
+{z:"锦绣中华民俗村",e:"Splendid China",c:"scenic",s:"华侨城",w:6,p:"¥200",h:"09:00–21:00",ico:"🏯",
+ d:"微缩中国：万里长城、故宫、布达拉宫尽收眼底，民俗村还有各民族歌舞。",
+ de:"Miniature China: the Great Wall, Forbidden City and Potala Palace, plus minority-ethnic performances.",
+ x:"一天看遍'中国'，晚上有龙凤舞中华大秀。",xe:"'All of China in one day'; evening grand show.",
+ t:"微缩景观·民俗",te:"miniature China"},
+{z:"仙湖植物园·弘法寺",e:"Xianhu Botanical Garden",c:"scenic",s:"仙湖路",w:12,p:"¥15",h:"06:00–21:00",ico:"🌿",
+ d:"深圳最有禅意的植物园，湖光山色，山顶弘法寺香火旺盛。",
+ de:"Shenzhen's most serene garden: lake, mountains and the incense-filled Hongfa Temple.",
+ x:"清晨去最清幽，可顺道上香。",xe:"Go early morning for peace; temple at the top.",
+ t:"植物园·寺庙",te:"garden & temple"},
+{z:"梧桐山",e:"Wutong Mountain",c:"scenic",s:"梧桐山南",w:15,p:"Free",h:"Open 24h",ico:"⛰️",
+ d:"深圳第一峰(943米)，登顶可俯瞰深圳市区与大鹏湾，云雾缭绕如仙境。",
+ de:"Shenzhen's highest peak (943 m): panorama of the city and Mirs Bay; often wrapped in clouds.",
+ x:"全程登山约3-4小时，备足水和体力。",xe:"Full ascent takes 3–4 h — bring water.",
+ t:"登山",te:"hiking"},
+{z:"海上世界",e:"Sea World",c:"scenic",s:"海上世界",w:4,p:"Free",h:"Open 24h",ico:"🚢",
+ d:"停泊在蛇口的明华轮地标，周边是餐饮酒吧街与海上世界文化艺术中心。",
+ de:"The 'Minghua' cruise-liner landmark in Shekou, ringed by restaurants, bars and a design museum.",
+ x:"夜景灯光+音乐喷泉很出片。",xe:"Evening lights and the fountain show are photogenic.",
+ t:"地标·夜生活",te:"landmark"},
+{z:"洪湖公园",e:"Honghu Park",c:"scenic",s:"洪湖",w:6,p:"Free",h:"Open 24h",ico:"🪷",
+ d:"以荷花闻名：每年6-8月百亩荷塘盛开，是摄影爱好者的天堂。",
+ de:"Famous for lotus flowers: a hundred acres of blooms from June to August.",
+ x:"荷花季(6-8月)清晨去最出片。",xe:"Visit at dawn during lotus season (Jun–Aug).",
+ t:"荷花",te:"lotus"},
+{z:"光明虹桥公园",e:"Hongqiao Park, Guangming",c:"scenic",s:"虹桥公园",w:5,p:"Free",h:"06:00–22:00",ico:"🔴",
+ d:"4公里长的'红飘带'空中栈道蜿蜒在青山间，深圳最出圈的网红打卡点。",
+ de:"A 4-km crimson 'red ribbon' walkway winding over green hills — Shenzhen's most viral photo spot.",
+ x:"红色栈道配蓝天绿树，穿白色衣服更出片。",xe:"Wear white; the red ribbon pops against blue sky and green hills.",
+ t:"网红栈道",te:"red ribbon"},
+{z:"凤凰山森林公园",e:"Fenghuang Mountain",c:"scenic",s:"桥头",w:18,p:"Free",h:"06:00–19:00",ico:"⛩️",
+ d:"福永人的后花园，山脚凤凰古庙香火旺，登顶可见宝安机场飞机起降。",
+ de:"Bao'an's backyard: the ancient Fenghuang Temple at the foot, plane-spotting from the summit.",
+ x:"庙会农历初一、十五最热闹。",xe:"Busiest on the 1st & 15th of the lunar month.",
+ t:"登山·古庙",te:"temple hike"},
+{z:"前海石公园",e:"Qianhai Stone Park",c:"scenic",s:"前海湾",w:15,p:"Free",h:"Open 24h",ico:"🌅",
+ d:"在前海金融城看日落，'前海石'是深圳改革开放的地标记忆。",
+ de:"Sunset over the Qianhai financial district; the 'Qianhai Stone' marks Shenzhen's reform era.",
+ x:"傍晚看摩天楼群日落，夜景更佳。",xe:"Sunset between the skyscrapers is stunning.",
+ t:"日落·海湾",te:"sunset"},
+/* ---- CULTURE 文化 ---- */
+{z:"深圳博物馆",e:"Shenzhen Museum",c:"culture",s:"市民中心",w:6,p:"Free",h:"10:00–18:00(Mon closed)",ico:"🏛️",
+ d:"从'深圳速度'到改革开放，用文物讲一座城市40年的传奇。",
+ de:"How a fishing town became a megacity — the Shenzhen miracle told through artefacts.",
+ x:"免费但需公众号预约，周一闭馆。",xe:"Free but reserve via WeChat; closed Mondays.",
+ t:"城市史",te:"city history"},
+{z:"深圳当代艺术与城市规划馆",e:"MOCA & Urban Planning Museum",c:"culture",s:"少年宫",w:5,p:"¥60",h:"10:00–18:00(Mon closed)",ico:"🎨",
+ d:"银色'云朵'建筑本身就是艺术品，馆内城市规划展震撼展现深圳蓝图。",
+ de:"The silver 'cloud' building is itself an artwork; inside, the urban-planning exhibition shows Shenzhen's blueprint.",
+ x:"建筑设计感极强，随手拍大片。",xe:"The architecture is a photo shoot by itself.",
+ t:"当代艺术·规划展",te:"art & planning"},
+{z:"关山月美术馆",e:"Guan Shanyue Art Museum",c:"culture",s:"莲花村",w:7,p:"Free",h:"09:00–17:00(Mon closed)",ico:"🖼️",
+ d:"以岭南画派大师关山月命名的国家一级美术馆，常有重磅展览。",
+ de:"National first-class gallery named after Lingnan-school master Guan Shanyue; major exhibitions year-round.",
+ x:"常设展免费，特展需购票。",xe:"Permanent collection is free; special shows ticketed.",
+ t:"美术馆",te:"art museum"},
+{z:"华侨城创意文化园",e:"OCT-LOFT",c:"culture",s:"侨城东",w:9,p:"Free",h:"10:00–22:00",ico:"🎧",
+ d:"旧厂房改造的艺术区：画廊、独立书店、黑胶唱片店、咖啡与设计商店。",
+ de:"Factory-turned-art district: galleries, indie bookshops, vinyl stores, coffee and design shops.",
+ x:"周末有创意市集，下午去最好逛。",xe:"Weekend creative markets; afternoons are best.",
+ t:"创意园",te:"creative district"},
+{z:"大芬油画村",e:"Dafen Oil Painting Village",c:"culture",s:"大芬",w:8,p:"Free",h:"09:00–18:00",ico:"🖌️",
+ d:"全球油画产业基地，几百间画室现场作画，可定制一幅属于自己的油画。",
+ de:"Global hub of oil-painting production: hundreds of studios paint on-site; commission your own portrait.",
+ x:"30分钟可现场画一张迷你肖像。",xe:"Get a mini portrait painted in ~30 min.",
+ t:"油画村",te:"oil painting"},
+{z:"南头古城",e:"Nantou Ancient City",c:"culture",s:"南头古城",w:4,p:"Free",h:"Open 24h",ico:"🏮",
+ d:"深圳1700年历史的原点：古城墙、新安县衙，与潮流小店共生。",
+ de:"Shenzhen's 1,700-year-old origin: city walls and the imperial yamen, now fused with trendy shops.",
+ x:"晚上的灯光与酒吧街别有味道。",xe:"Evening lights and the bar street are atmospheric.",
+ t:"古城·历史原点",te:"ancient city"},
+{z:"东门老街",e:"Dongmen Old Street",c:"culture",s:"老街",w:4,p:"Free",h:"10:00–22:00",ico:"🛍️",
+ d:"'深圳墟'从这里开始：300年商业老街，如今是年轻人的潮流批发地。",
+ de:"Where 'Shenzhen market' began: a 300-year-old commercial street, now a trendy bazaar.",
+ x:"砍价是这里的传统艺能。",xe:"Bargaining is the local sport.",
+ t:"老街·购物",te:"old street"},
+{z:"华强北",e:"Huaqiangbei",c:"culture",s:"华强北",w:3,p:"Free",h:"10:00–21:00",ico:"📱",
+ d:"'中国电子第一街'：全球电子元器件的风向标，赛格广场是电子达人的圣殿。",
+ de:"'China's No.1 electronics street' — a global bellwether for components; Seg Plaza is a geek pilgrimage site.",
+ x:"手机配件、无人机配件一应俱全。",xe:"Everything from phone parts to drone gear.",
+ t:"电子第一街",te:"electronics"},
+{z:"中英街",e:"Zhongying Street",c:"culture",s:"沙头角",w:20,p:"Free",h:"09:00–18:00",ico:"🚧",
+ d:"'一街两制'的历史奇观：街道中轴就是深港分界线，免税店云集。",
+ de:"The 'one street, two systems' marvel: the street's centreline is the Shenzhen–HK border, lined with duty-free shops.",
+ x:"需凭身份证办理通行证(免费)。",xe:"A free permit (with passport/ID) is required to enter.",
+ t:"边境历史",te:"border history"},
+{z:"平安金融中心·云际观光",e:"PAFC Sky Walk (Free Sky)",c:"culture",s:"购物公园",w:6,p:"¥200",h:"10:00–20:30",ico:"🏙️",
+ d:"深圳第一高楼(599米)的116层观光层，360度俯瞰全城，胆大者走玻璃悬挑。",
+ de:"Observation deck at 599 m on the 116th floor of Shenzhen's tallest tower; glass-floor outlook for the brave.",
+ x:"日落前1小时上去，白天夜景一起看。",xe:"Go an hour before sunset to catch day AND night views.",
+ t:"摩天楼·观光",te:"skyscraper"},
+{z:"地王大厦观光",e:"Diwang Tower Skywalk",c:"culture",s:"大剧院",w:5,p:"¥80",h:"08:30–21:30",ico:"🌆",
+ d:"深圳90年代的地标，384米高空'深港之窗'，遥望香港新界。",
+ de:"The landmark of 1990s Shenzhen: the 384-m 'Window of Shenzhen & HK' looking toward the New Territories.",
+ x:"比平安金融中心便宜，看老深圳记忆。",xe:"Cheaper than PAFC; a nod to old Shenzhen.",
+ t:"高空观光",te:"observation"},
+{z:"鹤湖新居",e:"Hehu Hakka Fortress",c:"culture",s:"南联",w:10,p:"Free",h:"09:00–17:30",ico:"🏯",
+ d:"深圳最大的客家围屋，两百多年历史，被誉为'客家第一围'。",
+ de:"Shenzhen's largest Hakka walled village (200+ years), known as 'No.1 Hakka Fortress'.",
+ x:"免费开放，人少清静。",xe:"Free entry and usually peaceful.",
+ t:"客家围屋",te:"Hakka fortress"},
+{z:"甘坑客家小镇",e:"Gankeng Hakka Town",c:"culture",s:"甘坑",w:6,p:"Free",h:"10:00–21:00",ico:"🏘️",
+ d:"三百余年客家古村落：炮楼、碉楼、家风家训馆，深圳版'小丽江'。",
+ de:"A 300-year-old Hakka village with watchtowers and clan halls — Shenzhen's 'little Lijiang'.",
+ x:"夜景灯光像走进宫崎骏动画。",xe:"The lantern-lit evening feels like a Ghibli film.",
+ t:"客家古村",te:"Hakka village"},
+{z:"沙井古墟",e:"Shajing Ancient Market",c:"culture",s:"沙井古墟",w:8,p:"Free",h:"Open 24h",ico:"🦪",
+ d:"千年蚝乡：宋代古墟、龙津石塔、蚝壳墙，岭南水乡的最后记忆。",
+ de:"The thousand-year oyster town: a Song-dynasty market, stone pagoda and oyster-shell walls.",
+ x:"蚝壳墙是拍照打卡的稀有背景。",xe:"The oyster-shell wall is a rare photo backdrop.",
+ t:"千年蚝乡",te:"oyster town"},
+{z:"深圳湾体育中心·春茧",e:"Shenzhen Bay Sports Centre",c:"culture",s:"后海",w:10,p:"Free",h:"08:00–22:00",ico:"⚽",
+ d:"'春茧'体育馆是深圳新地标，2011大运会场馆，可远眺春笋大楼。",
+ de:"The 'Spring Cocoon' stadium, a 2011 Universiade venue and new city landmark near the Spring Bamboo tower.",
+ x:"附近人才公园+海岸城可连成半日游。",xe:"Pair with Talent Park and Coast City mall.",
+ t:"地标体育场",te:"stadium"},
+{z:"深圳图书馆·音乐厅",e:"Shenzhen Library & Concert Hall",c:"culture",s:"少年宫",w:4,p:"Free",h:"09:00–21:00",ico:"📚",
+ d:"福田CBD的文化双星：'深圳眼'音乐厅与全玻璃幕墙图书馆，设计大师矶崎新之作。",
+ de:"Futian's cultural twin stars: the 'Shenzhen Eye' concert hall and a glass library by Arata Isozaki.",
+ x:"音乐厅常有惠民演出。",xe:"The concert hall often has budget performances.",
+ t:"建筑·演出",te:"architecture"},
+{z:"深圳改革开放展览馆",e:"Shenzhen Reform Exhibition Hall",c:"culture",s:"市民中心",w:10,p:"Free",h:"10:00–18:00(Mon closed)",ico:"📜",
+ d:"'大潮起珠江'主题展：用场景复原和实物讲述广东改革开放40年。",
+ de:"'Great Tide Rises in the Pearl River': immersive scenes and artefacts of Guangdong's 40 reform years.",
+ x:"适合对改革开放历史感兴趣的游客。",xe:"A must for those curious about China's reform era.",
+ t:"改革开放史",te:"reform history"},
+{z:"大鹏所城",e:"Dapeng Fortress",c:"culture",s:"溪涌",w:60,p:"Free",h:"08:30–18:00",ico:"🏯",
+ d:"600年海防古城，深圳别称'鹏城'即源于此，明清古建筑群保存完好。",
+ de:"A 600-year-old coastal defence fortress — the origin of Shenzhen's nickname 'Pengcheng'.",
+ x:"距溪涌站较远，建议出站打车约30分钟或换乘公交。",xe:"Far from the station — take a ~30-min taxi or bus.",
+ t:"海防古城",te:"fortress"},
+{z:"观澜版画村",e:"Guanlan Print Village",c:"culture",s:"牛湖",w:15,p:"Free",h:"09:00–18:00",ico:"🖨️",
+ d:"客家古村与版画艺术的结合，中国版画大师们的创作基地。",
+ de:"Hakka village reborn as a print-art colony — base of China's master printmakers.",
+ x:"周末有体验工坊，可自己印一幅版画。",xe:"Weekend workshops let you print your own.",
+ t:"版画·古村",te:"print village"},
+{z:"大万世居",e:"Dawanshiju Hakka House",c:"culture",s:"坪山围",w:15,p:"Free",h:"09:00–17:00",ico:"🏛️",
+ d:"深圳最大的方形客家围屋之一，250年历史，坪山客家文化名片。",
+ de:"One of Shenzhen's largest square Hakka walled houses (250 years), in Pingshan.",
+ x:"与坪山中心公园连游。",xe:"Combine with Pingshan Central Park.",
+ t:"客家围屋",te:"Hakka house"}
+];
+
+/* ================= ONE-DAY ITINERARIES ================= */
+const ITINS=[
+{z:"城市精华一日游",e:"City Icons in One Day",steps:["市民中心|深圳博物馆","少年宫|莲花山公园","深圳湾公园|深圳湾公园","海上世界|海上世界"],
+ s:"博物馆→莲花山顶看CBD→海边看日落→蛇口夜生活，一张地铁票串起深圳的过去与现在。",
+ se:"Museum → Lianhuashan summit for the CBD view → seaside sunset → Shekou nightlife: Shenzhen past and present on one metro card."},
+{z:"岭南美食一日游",e:"Lingnan Food Crawl",steps:["大剧院|点都德","老街|东门町美食街","沙井古墟|沙井蚝","华强北|八合里海记"],
+ s:"广式早茶→老街小吃→千年蚝乡→潮汕牛肉火锅，从早茶吃到宵夜的广东式幸福。",
+ se:"Yum cha → old-street snacks → thousand-year oyster town → Chaoshan hotpot: a Guangdong-style day of eating."},
+{z:"山海自然一日游",e:"Sea & Mountain Escape",steps:["梧桐山南|梧桐山","大梅沙|大梅沙海滨公园","小梅沙|小梅沙海洋世界","盐田墟|盐田海鲜街"],
+ s:"登深圳第一峰→金色沙滩→海洋世界→海边晚餐，把最壮阔的深圳山海装进一天。",
+ se:"Hike the highest peak → golden beach → ocean world → seafood dinner: Shenzhen's wild side in one day."}
+];
+/* ================= SCHEMATIC MAP: polyline paths (schematic, not to scale) ================= */
+const PATH={
+L1:[[505,355],[470,340],[418,322],[398,300],[388,272],[385,262],[295,258],[265,305],[215,355],[160,300],[130,235],[60,150]],
+L2:[[170,460],[200,430],[225,395],[255,345],[265,305],[300,290],[352,222],[372,296],[418,322],[462,342],[520,330]],
+L8:[[535,320],[545,330],[555,350],[575,380],[595,405],[620,435]],
+L3:[[405,250],[415,258],[385,265],[352,238],[368,286],[400,288],[418,322],[432,328],[450,318],[475,272],[580,180],[600,150],[715,35]],
+L4:[[435,222],[420,240],[395,262],[385,262],[352,222],[350,238],[242,150],[215,165],[110,90]],
+L5:[[170,460],[190,275],[215,165],[245,255],[400,288],[418,322],[432,328],[475,272],[455,332],[462,342]],
+L6:[[398,300],[352,272],[215,165],[242,150],[185,95],[110,85]],
+L6B:[[150,60],[165,70]],
+L7:[[230,240],[245,255],[295,258],[400,288],[425,255],[415,258],[398,300],[372,296],[368,286],[400,288],[450,318]],
+L9:[[190,275],[300,300],[398,300],[418,322],[445,345],[470,360]],
+L10:[[435,222],[420,240],[400,272],[395,252],[345,252],[350,238],[215,165],[110,90]],
+L11:[[400,318],[398,300],[395,252],[352,222],[295,258],[300,300],[255,345],[155,300],[85,130],[110,85]],
+L12:[[225,395],[245,310],[270,335],[250,200],[130,235],[110,85]],
+L13:[[258,380],[250,365],[255,345],[215,355],[245,340],[225,235],[200,120],[165,70],[135,75],[110,85]],
+L14:[[395,252],[400,288],[430,265],[475,272],[580,180],[700,270]],
+L16:[[580,180],[600,150],[625,155],[600,170],[625,230],[705,310]],
+L20:[[85,130],[100,115]]
+};
+/* fixed coords for transfer stations so lines meet at the same point */
+const TCOORDS={
+"世界之窗":[265,305],"大剧院":[418,322],"老街":[432,328],"购物公园":[385,265],
+"会展中心":[395,262],"前海湾":[155,300],"宝安中心":[130,235],"科学馆":[398,300],
+"车公庙":[295,258],"岗厦":[400,272],"桃园":[235,330],"深大":[215,355],
+"福田":[365,210],"市民中心":[352,222],"华强北":[372,296],"赤湾":[170,460],
+"黄贝岭":[462,342],"湖贝":[452,335],"太安":[455,332],"安托山":[300,275],
+"景田":[330,250],"后海":[255,345],"科苑":[232,325],
+"少年宫":[350,238],"布吉":[475,272],"通新岭":[380,292],"华新":[368,286],
+"田贝":[450,318],"红岭":[395,308],"莲花村":[345,252],"双龙":[600,150],
+"大运":[580,180],"坪山围":[625,230],
+"福民":[420,240],"福田口岸":[435,222],"深圳北":[215,165],"红山":[242,150],
+"西丽":[245,255],"留仙洞":[225,235],"前湾":[190,275],"灵芝":[250,200],
+"光明":[150,60],"松岗":[110,85],"八卦岭":[385,282],"银湖":[352,272],
+"上屋":[200,120],"凤凰城":[185,95],"公明广场":[135,75],
+"光明城":[165,70],
+"红岭北":[410,310],"石厦":[415,258],"黄木岗":[400,288],"孖岭":[375,268],
+"红树湾南":[300,300],"红岭南":[400,318],"粤海门":[245,340],"南油":[272,332],
+"岗厦北":[395,252],
+"机场北":[85,130],"福永":[105,115],
+"南山":[270,335],"南头古城":[245,310],"海上世界":[225,395],
+"沙井古墟":[125,100],"国展":[110,125],"国展北":[103,120],
+"深圳湾口岸":[258,380],"人才公园":[250,365],"石岩":[215,110],
+"罗湖北":[430,265],"石芽岭":[470,250]
+};
+/* station alias (4号线站名差异) */
+const ALIAS={"深圳北站":"深圳北"};
+function canon(n){return ALIAS[n]||n;}
+function segLen(a,b){return Math.hypot(a[0]-b[0],a[1]-b[1]);}
+/* evenly distribute stations along each polyline */
+function buildStnPos(){
+  const P={};
+  LINES.forEach(L=>{
+    const path=PATH[L.id], segs=[], pts=[path[0].slice()];
+    let total=0;
+    for(let i=0;i<path.length-1;i++){const d=segLen(path[i],path[i+1]);segs.push(d);total+=d;}
+    const n=L.stations.length, step=total/(n-1);
+    let si=0, acc=0, cur=path[0].slice();
+    for(let i=1;i<n;i++){
+      let need=step;
+      while(need>1e-6){
+        const rest=segs[si]-acc;
+        if(need>=rest){need-=rest;si++;acc=0;cur=path[si].slice();}
+        else{acc+=need;const a=path[si],b=path[si+1],r=acc/segs[si];
+          cur=[a[0]+(b[0]-a[0])*r,a[1]+(b[1]-a[1])*r];need=0;}
+      }
+      pts.push(cur.slice());
+    }
+    pts[n-1]=path[path.length-1].slice();
+    P[L.id]=pts;
+  });
+  return P;
+}
+const STNPOS=buildStnPos();
+/* station -> lines (incl. through connections, e.g. L8 runs through to Lianfang/Liantang with L2) */
+const STLINES={}, ALLSTN=[];
+LINES.forEach(L=>{
+  L.stations.forEach(s=>{s=canon(s);(STLINES[s]=STLINES[s]||[]).push(L.id);if(ALLSTN.indexOf(s)<0)ALLSTN.push(s);});
+  if(L.through)L.through.forEach(t=>{t=canon(t);(STLINES[t]=STLINES[t]||[]).push(L.id);if(ALLSTN.indexOf(t)<0)ALLSTN.push(t);});
+});
+/* ================= ROUTE PLANNING ================= */
+const ADJ={}; // station -> [{to,line}]
+ALLSTN.forEach(s=>ADJ[s]=[]);
+LINES.forEach(L=>{
+  for(let i=0;i<L.stations.length-1;i++){
+    const a=canon(L.stations[i]),b=canon(L.stations[i+1]);
+    if(a===b)continue;
+    ADJ[a].push({to:b,line:L.id});ADJ[b].push({to:a,line:L.id});
+  }
+  /* through connection: e.g. L8 runs through from Liantang (shared with L2) */
+  if(L.through)L.through.forEach(t=>{
+    t=canon(t);const first=canon(L.stations[0]);
+    if(t!==first){ADJ[t].push({to:first,line:L.id});ADJ[first].push({to:t,line:L.id});}
+  });
+});
+const INTER=ALLSTN.filter(s=>STLINES[s].length>1); // transfer stations
+INTER.forEach(s=>{
+  const ls=STLINES[s];
+  for(let i=0;i<ls.length;i++)for(let j=i+1;j<ls.length;j++){
+    ADJ[s].push({to:s,line:ls[j],xf:true});ADJ[s].push({to:s,line:ls[i],xf:true});
+  }
+});
+/* min transfers: BFS on line-level state (station,currentLine) */
+function planRoute(from,to,mode){
+  from=canon(from);to=canon(to);
+  if(!ADJ[from]||!ADJ[to])return null;
+  if(from===to)return {legs:[],stops:0,time:2,fare:2,from,to};
+  const best={xf:99,stops:9999,time:1e9,path:null};
+  /* --- mode 1: least transfers (BFS over line groups) --- */
+  const seen=new Map(); // station|line -> xf
+  const q=[];let qi=0;
+  const startLines=STLINES[from];
+  startLines.forEach(ln=>{seen.set(from+"|"+ln,0);q.push({s:from,ln,xf:0,stops:0,prev:null});});
+  let sol=null;
+  while(qi<q.length){
+    const cur=q[qi++];
+    if(cur.s===to){if(!sol||cur.xf<sol.xf||(cur.xf===sol.xf&&cur.stops<sol.stops))sol=cur;continue;}
+    ADJ[cur.s].forEach(e=>{
+      const nextS=e.to, nextLn=e.line;
+      if(e.xf){ // switching at transfer station
+        if(cur.ln===nextLn)return;
+        const k=nextS+"|"+nextLn,nxf=cur.xf+1;
+        if(!seen.has(k)||seen.get(k)>nxf){seen.set(k,nxf);q.push({s:nextS,ln:nextLn,xf:nxf,stops:cur.stops,prev:cur});}
+      }else{
+        if(e.line!==cur.ln)return; // must stay on the same line
+        const k=nextS+"|"+nextLn;
+        if(!seen.has(k)||seen.get(k)>cur.xf){seen.set(k,cur.xf);q.push({s:nextS,ln:nextLn,xf:cur.xf,stops:cur.stops+1,prev:cur});}
+      }
+    });
+  }
+  /* rebuild legs from BFS path */
+  function legsFrom(cur){
+    const chain=[];while(cur){chain.unshift(cur);cur=cur.prev;}
+    const legs=[];let i=0;
+    while(i<chain.length){
+      const ln=chain[i].ln;let j=i;
+      while(j+1<chain.length&&chain[j+1].ln===ln&&chain[j+1].s!==chain[j].s)j++;
+      legs.push({line:ln,fromS:chain[i].s,toS:chain[j].s,stops:j-i});
+      i=j+1;
+      if(i<chain.length&&chain[i].s===chain[i-1].s){/* transfer at same station */}
+    }
+    return legs;
+  }
+  let legs=null;
+  if(sol)legs=legsFrom(sol);
+  else{ // fallback: plain BFS by stations
+    const vis=new Set([from]),q2=[[from,null]],par={};
+    let qi2=0,found=false;
+    while(qi2<q2.length&&!found){
+      const [s,ln]=q2[qi2++];
+      ADJ[s].forEach(e=>{if(vis.has(e.to)||e.xf)return;vis.add(e.to);par[e.to]=s;
+        if(e.to===to){found=true;}q2.push([e.to,e.line]);});
+    }
+    if(found){const chain=[to];let s=to;while(s!==from){s=par[s];chain.unshift(s);}
+      legs=[{line:null,fromS:from,toS:to,stops:chain.length-1}];}
+  }
+  /* --- mode 2: fastest (line-level Dijkstra: state = station|line) --- */
+  function fastPlan(){
+    const perSt=4,xfPen=7;
+    const dist=new Map(),prv=new Map(),pq=[];
+    STLINES[from].forEach(ln=>{const k=from+"|"+ln;dist.set(k,0);pq.push([0,from,ln]);});
+    let target=null;
+    while(pq.length){
+      pq.sort((a,b)=>a[0]-b[0]);
+      const [d,s,ln]=pq.shift(),k=s+"|"+ln;
+      if(dist.get(k)<d)continue;
+      if(s===to){target=[s,ln,d];break;}
+      ADJ[s].forEach(e=>{
+        let nd,nk;
+        if(e.xf){ // switch line at this station
+          if(e.line===ln)return;
+          nd=d+xfPen;nk=s+"|"+e.line;
+        }else{ // move to neighbour on same line
+          if(e.line!==ln)return;
+          nd=d+perSt;nk=e.to+"|"+ln;
+        }
+        if(!dist.has(nk)||nd<dist.get(nk)){dist.set(nk,nd);prv.set(nk,[s,ln]);pq.push([nd,...nk.split("|")]);}
+      });
+    }
+    if(!target)return null;
+    const chain=[];let cur=[target[0],target[1]];
+    while(true){
+      chain.unshift(cur);
+      if(cur[0]===from&&STLINES[from].includes(cur[1]))break;
+      const p=prv.get(cur[0]+"|"+cur[1]);
+      if(!p)break;
+      cur=p;
+    }
+    const legs=[];let i=0;
+    while(i<chain.length){
+      const ln=chain[i][1];let j=i;
+      while(j+1<chain.length&&chain[j+1][1]===ln)j++;
+      if(j>i)legs.push({line:ln,fromS:chain[i][0],toS:chain[j][0],stops:j-i});
+      i=j+1;
+    }
+    return {legs,stops:chain.length-1,time:Math.round(target[2]),from,to};
+  }
+  const fast=fastPlan();
+  if(mode==="fast")return fast||(legs?decorate(legs,from,to):null);
+  if(legs)return decorate(legs,from,to);
+  return fast||null;
+}
+function fare(stops){const s=stops+1;
+  if(s<=4)return 2;if(s<=10)return 3;if(s<=16)return 4;if(s<=24)return 5;return 6;}
+function decorate(legs,from,to){
+  let stops=0;legs.forEach(l=>stops+=l.stops);
+  const time=Math.max(8,5+stops*3+legs.length*5);
+  return {legs,stops,time,fare:fare(stops),from,to};
+}
+function lineOf(id){return LINES.find(l=>l.id===id);}
+/* ================= MAP RENDER ================= */
+let lang="en",hiddenLines=new Set(),curFrom=null,curTo=null,routeOverlay=null;
+const I18N={
+ en:{hdr_sub:"Ride the metro to taste Lingnan food, sea & mountain scenery, and 40 years of culture",
+ hdr_ap:"APEC 2026 · Nov · Shenzhen",tab_route:"🚉 Trip Planner",tab_explore:"🍜 Explore",tab_ask:"🤖 Ask Guide",
+ lb_from:"From (station)",lb_to:"To (station or attraction)",mode_fast:"Fastest",mode_less:"Fewer transfers",
+ go_btn:"🚀 Plan My Route",planner_note:"Tip: tap any station on the map to set start / destination, or to see nearby attractions.",
+ f_all:"All",f_food:"🍜 Lingnan Food",f_scenic:"🏞️ Scenery",f_culture:"🏛️ Culture",
+ chat_ph:"e.g. Where can I eat dim sum?",itin_title:"APEC One-Day Itineraries",map_note:"Schematic map · tap stations",
+ ft1:"MetroShenzhen · APEC 2026 Travel Guide",ft2:"Data: 17 lines · 452 stations (Jun 2026). Times & fares are estimates. Map is schematic, not to scale.",
+ find:"Find",here:"Here",line:"Line",to:"to",ride:"ride",xf:"transfer",xfs:"transfers",stops:"stops",fare:"Fare",est:"Est.",setStart:"Set as start",setEnd:"Set as destination",
+ nearby:"Nearby attractions",walk:"walk",planThis:"Plan from here",tapSet:"Tap a station first (or type above)",noResult:"No route found — check the station names.",routeNotFound:"No route",
+ quickHere:"Popular stations",quickQs:"Try asking…",welcome:"Hi! I'm your Shenzhen metro guide. Ask me anything — where to eat, what to see, or how to get somewhere. 🚇",
+ askHint:"Try: \"dim sum\" / \"beach\" / \"museum\" / \"from OCT to Dameisha\" / \"one day\"",poiTitle:"Lingnan Food",poiS:"Scenery",poiC:"Culture",hour:"Hours",price:"Price"},
+ zh:{hdr_sub:"坐地铁，尝岭南美食、看山海风景、读四十年文化",hdr_ap:"APEC 2026 · 11月 · 深圳",tab_route:"🚉 路线规划",tab_explore:"🍜 探索",tab_ask:"🤖 问问向导",
+ lb_from:"起点（地铁站）",lb_to:"终点（站点或景点）",mode_fast:"最快",mode_less:"少换乘",
+ go_btn:"🚀 规划路线",planner_note:"提示：点击地图上的站点可设为起点/终点，或查看附近景点。",
+ f_all:"全部",f_food:"🍜 岭南美食",f_scenic:"🏞️ 风景",f_culture:"🏛️ 文化",
+ chat_ph:"例如：哪里能吃早茶？",itin_title:"APEC 一日游路线",map_note:"示意图 · 点击站点",
+ ft1:"MetroShenzhen · APEC 2026 旅行指南",ft2:"数据：17条线路 · 452座车站（2026年6月）。时间与票价仅供参考。地图为示意图，非等比。",
+ find:"查找",here:"本站",line:"号线",to:"到",ride:"乘坐",xf:"次换乘",xfs:"次换乘",stops:"站",fare:"票价",est:"约",setStart:"设为起点",setEnd:"设为终点",
+ nearby:"附近景点",walk:"步行",planThis:"从这里出发",tapSet:"请先点击一个站点（或在上方输入）",noResult:"未找到路线——请检查站名。",routeNotFound:"无路线",
+ quickHere:"热门站点",quickQs:"可以问我…",welcome:"你好！我是深圳地铁向导。问我任何问题——去哪吃、看什么、怎么走。🚇",
+ askHint:"试试：「早茶」「海滩」「博物馆」「从华侨城到大梅沙」「一日游」",poiTitle:"岭南美食",poiS:"风景",poiC:"文化",hour:"营业",price:"人均"}};
+function T(k){return (I18N[lang]&&I18N[lang][k])||I18N.en[k]||k;}
+function applyLang(){
+  document.querySelectorAll("[data-i]").forEach(el=>{const k=el.getAttribute("data-i");if(I18N[lang][k])el.textContent=I18N[lang][k];});
+  document.getElementById("lang-en").classList.toggle("active",lang==="en");
+  document.getElementById("lang-zh").classList.toggle("active",lang==="zh");
+  renderPOIs();renderItins();renderQuick();renderAskNote();drawRoute();
+}
+function stnXY(s){const c=TCOORDS[s];if(c)return c;
+  for(const id in STNPOS){const L=lineOf(id),i=L.stations.map(canon).indexOf(s);if(i>=0)return STNPOS[id][i];}
+  return null;}
+function drawMap(){
+  const W=800,H=540;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+  LINES.forEach(L=>{
+    if(hiddenLines.has(L.id))return;
+    const pts=PATH[L.id].map(p=>p.join(",")).join(" ");
+    svg+=`<polyline points="${pts}" fill="none" stroke="${L.color}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>`;
+  });
+  /* station nodes */
+  ALLSTN.forEach(s=>{
+    if(hiddenLines.has(STLINES[s][0]))return;
+    const xy=stnXY(s);if(!xy)return;
+    const isI=STLINES[s].length>1,r=isI?7:4.5;
+    const vis=STLINES[s].filter(l=>!hiddenLines.has(l)).length>0;
+    if(!vis)return;
+    svg+=`<g class="stn${isI?" inter":""}" data-s="${s}" transform="translate(${xy[0]},${xy[1]})">
+      <rect class="labbg" x="-30" y="-32" width="60" height="18" rx="3"/>
+      <circle r="${r}" fill="${isI?"#fff":lineOf(STLINES[s][0]).color}" stroke="${isI?"#33415a":lineOf(STLINES[s][0]).color}" stroke-width="${isI?2.5:1.5}"/>
+      <text class="lab" y="-20" text-anchor="middle">${s}</text></g>`;
+  });
+  svg+=`</svg>`;
+  document.getElementById("mapSvg").innerHTML=svg;
+  /* legend */
+  const lg=document.getElementById("legend");
+  lg.innerHTML="<b>"+T("line")+"</b>"+LINES.map(L=>
+    `<div class="l${hiddenLines.has(L.id)?" off":""}" data-l="${L.id}">
+      <span class="bar" style="background:${L.color}"></span>${lang==="en"?L.en:L.zh}
+      <span style="opacity:.55;margin-left:auto">${L.stations.length}</span></div>`).join("");
+  lg.querySelectorAll(".l").forEach(el=>el.onclick=()=>{
+    const id=el.getAttribute("data-l");
+    hiddenLines.has(id)?hiddenLines.delete(id):hiddenLines.add(id);
+    drawMap();});
+  /* interaction */
+  document.querySelectorAll(".stn").forEach(g=>{
+    const s=g.getAttribute("data-s"),xy=stnXY(s);
+    g.onmouseenter=e=>showTip(s,e.clientX,e.clientY,xy);
+    g.onmouseleave=()=>tipHide();
+    g.onclick=()=>openPop(s,xy);
+  });
+}
+const tip=document.getElementById("tip"),pop=document.getElementById("pop");
+function showTip(s,cx,cy){
+  const near=POIS.filter(p=>p.s===s).slice(0,3);
+  let h="<b>"+s+"</b> <span style='opacity:.75'>· "+(lang==="en"?STLINES[s].map(l=>lineOf(l).en).join(" / "):STLINES[s].map(l=>lineOf(l).zh).join(" / "))+"</span>";
+  if(near.length)h+="<div style='margin-top:5px'>"+(lang==="en"?"Nearby:":"附近：")+near.map(p=>p.ico+" "+p.e).join(" · ")+"</div>";
+  tip.innerHTML=h;tip.style.display="block";
+  const mw=document.getElementById("mapwrap").getBoundingClientRect();
+  let x=cx-mw.left+14,y=cy-mw.top+14;
+  if(x>mw.width-260)x=cx-mw.left-250;
+  tip.style.left=x+"px";tip.style.top=y+"px";
+}
+function tipHide(){tip.style.display="none";}
+function openPop(s,xy){
+  const near=POIS.filter(p=>p.s===s);
+  let h=`<div class="pnm">${s}</div><div class="pln">${
+    lang==="en"?STLINES[s].map(l=>lineOf(l).en).join(" / "):STLINES[s].map(l=>lineOf(l).zh).join(" / ")}</div>
+    <div class="pbtns">
+      <button style="background:var(--ok)" data-a="start">${T("setStart")}</button>
+      <button style="background:var(--warn)" data-a="end">${T("setEnd")}</button></div>`;
+  if(near.length)h+="<div class='poilist'><b>"+T("nearby")+"</b>"+near.map(p=>
+    `<div>${p.ico} ${lang==="en"?p.e:p.z} · ${p.w}min ${T("walk")}</div>`).join("")+"</div>";
+  pop.innerHTML=h;
+  pop.style.display="block";
+  const mw=document.getElementById("mapwrap").getBoundingClientRect();
+  const xy2=stnXY(s);
+  let x=xy2[0]/800*mw.width+10,y=xy2[1]/540*mw.height+10;
+  if(x+mw.width*0.38>mw.width)x=mw.width-mw.width*0.4-10;
+  if(y+mw.height*0.3>mw.height)y=mw.height-mw.height*0.3-10;
+  pop.style.left=x+"px";pop.style.top=y+"px";
+  pop.querySelectorAll("button").forEach(b=>b.onclick=()=>{
+    const act=b.getAttribute("data-a");
+    if(act==="start"){curFrom=s;document.getElementById("from").value=lang==="en"?s:s;if(lang==="en"&&TCOORDS[s]){}popHide();if(curTo)doPlan();}
+    else{curTo=s;document.getElementById("to").value=s;popHide();if(curFrom)doPlan();}
+  });
+}
+function popHide(){pop.style.display="none";}
+document.getElementById("mapwrap").onclick=e=>{if(!e.target.closest(".stn")&&!e.target.closest(".pop"))popHide();};
+/* ================= TRIP RESULT ================= */
+function drawRoute(){
+  if(!routeOverlay)return;
+  const L=lineOf(routeOverlay.line);
+  if(hiddenLines.has(routeOverlay.line))return;
+  const svg=document.querySelector("#mapSvg svg");
+  if(!svg)return;
+  const o=document.querySelector(".route-overlay");
+  if(o)o.remove();
+  const pts=PATH[routeOverlay.line].map(p=>p.join(",")).join(" ");
+  const g=document.createElementNS("http://www.w3.org/2000/svg","g");
+  g.setAttribute("class","route-overlay");
+  g.innerHTML=`<polyline points="${pts}" class="route-line" stroke="${L.color}"/>
+    ${routeOverlay.stations.map(s=>{const xy=stnXY(s);return xy?`<circle class="route-node" r="6" cx="${xy[0]}" cy="${xy[1]}" stroke="${L.color}"/>`:"";}).join("")}`;
+  svg.appendChild(g);
+}
+function clearRoute(){routeOverlay=null;const o=document.querySelector(".route-overlay");if(o)o.remove();}
+function doPlan(){
+  const fromEl=document.getElementById("from"),toEl=document.getElementById("to");
+  let from=fromEl.value.trim(),to=toEl.value.trim();
+  if(!from||!to){document.getElementById("result").innerHTML="<div class='note'>"+T("tapSet")+"</div>";return;}
+  /* resolve POI names to stations */
+  const poiMatch=n=>POIS.find(p=>p.z===n||p.e.toLowerCase()===n.toLowerCase()||(lang==="en"&&p.e.toLowerCase().indexOf(n.toLowerCase())>=0)||(lang==="zh"&&p.z.indexOf(n)>=0));
+  let m1=poiMatch(from);if(m1)from=m1.s;
+  let m2=poiMatch(to);if(m2)to=m2.s;
+  if(from===to){document.getElementById("result").innerHTML="<div class='note'>⚠️ "+T("routeNotFound")+"</div>";return;}
+  const mode=document.querySelector("input[name=mode]:checked").value;
+  const r=planRoute(from,to,mode);
+  const box=document.getElementById("result");
+  if(!r){box.innerHTML="<div class='note'>⚠️ "+T("noResult")+"</div>";return;}
+  curFrom=from;curTo=to;
+  if(r.legs&&r.legs.length){
+    routeOverlay={line:r.legs[0].line,stations:[from,to]};
+    if(r.legs[0].line)drawRoute();
+  }
+  let h=`<div class="summary">${lang==="en"?"⏱️ Est.":"⏱️ 约"} <b>${r.time}min</b> · 🚉 ${r.stops+1} ${T("stops")} · 🔁 ${r.legs?r.legs.length-1:0} ${r.xf||T("xf")} · 💰 ${r.fare?r.fare:T("fare")}${r.fare?" CNY":""}</div>`;
+  if(r.legs)r.legs.forEach((leg,i)=>{
+    const L=lineOf(leg.line);
+    if(i>0)h+=`<div style="text-align:center;color:var(--warn);font-weight:700;padding:2px 0">↓ ${T("xf")}</div>`;
+    h+=`<div class="leg"><div class="ln" style="background:${L?L.color:"#888"}">${L?(lang==="en"?L.en.replace("Line ","L"):L.zh.replace("号线","")):"—"}</div>
+      <div class="tx">${T("ride")} <b>${L?(lang==="en"?L.en:L.zh):""}</b> ${T("to")} <b>${leg.toS}</b>
+      <div class="dim">${leg.fromS} → ${leg.toS} · ${leg.stops} ${T("stops")}</div></div></div>`;
+  });
+  else h+=`<div class="leg"><div class="tx">${from} → ${to}</div></div>`;
+  box.innerHTML=h;
+}
+/* ================= EXPLORE: POI LIST ================= */
+let poiFilter="all";
+function renderPOIs(){
+  const list=POIS.filter(p=>poiFilter==="all"||p.c===poiFilter);
+  document.getElementById("poilist").innerHTML=list.length?list.map(p=>{
+    const tcls="t-"+p.c;
+    const tag=lang==="en"?p.te:p.t;
+    return `<div class="poi" data-p="${p.e}">
+      <div class="ico t-${p.c}">${p.ico}</div>
+      <div class="pt"><div class="nm">${lang==="en"?p.e:p.z}<span class="tag ${tcls}">${tag}</span></div>
+      <div class="d">${lang==="en"?p.de:p.d}<br><span style="opacity:.8">🚇 ${p.s} · ${p.w}min ${T("walk")} · ${p.p} · ${p.h}</span></div></div></div>`;}).join("")
+  :"<div class='note'>—</div>";
+  document.querySelectorAll(".poi").forEach(el=>el.onclick=()=>{
+    const p=POIS.find(x=>x.e===el.getAttribute("data-p"));
+    document.getElementById("to").value=lang==="en"?p.e:p.z;
+    if(curFrom)doPlan();else{curTo=p.s;document.getElementById("to").value=p.s;}
+  });
+}
+/* ================= ITINERARIES ================= */
+function renderItins(){
+  document.getElementById("itins").innerHTML=ITINS.map((it,i)=>{
+    const st=it.steps.map(x=>{const [s,p]=x.split("|");return s;}).join(" → ");
+    return `<div class="itin" data-i="${i}"><div class="t">${lang==="en"?it.e:it.z}</div>
+      <div class="s">${lang==="en"?it.se:it.s}</div>
+      <div style="font-size:11.5px;color:#8a97a8;margin-top:4px">${st}</div>
+      <span class="go">${T("go_btn")}</span></div>`;}).join("");
+  document.querySelectorAll(".itin").forEach(el=>el.onclick=()=>{
+    const it=ITINS[el.getAttribute("data-i")];
+    const [fs]=it.steps[0].split("|"),[ts]=it.steps[it.steps.length-1].split("|");
+    document.getElementById("from").value=fs;document.getElementById("to").value=ts;
+    document.querySelectorAll("[data-tab]").forEach(b=>b.classList.toggle("active",b.getAttribute("data-tab")==="route"));
+    document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p.id==="panel-route"));
+    doPlan();
+  });
+}
+/* ================= QUICK STATIONS ================= */
+function renderQuick(){
+  const pops=["市民中心","世界之窗","深圳湾公园","海上世界","大梅沙","华侨城","老街","华强北","南头古城"];
+  document.getElementById("quickFrom").innerHTML=pops.map(s=>`<span class="chip" data-s="${s}">${s}</span>`).join("");
+  document.querySelectorAll("#quickFrom .chip").forEach(c=>c.onclick=()=>{
+    document.getElementById("from").value=c.getAttribute("data-s");curFrom=c.getAttribute("data-s");});
+  document.getElementById("quickQs").innerHTML=(lang==="en"?
+    ["🍜 dim sum?","🏖️ beach?","🏛️ museums?","🗺️ one-day plan?"]:
+    ["🍜 早茶去哪吃？","🏖️ 想看海？","🏛️ 博物馆？","🗺️ 一日游？"]).map((q,i)=>`<span class="chip" data-q="${i}">${q}</span>`).join("");
+  document.querySelectorAll("#quickQs .chip").forEach(c=>c.onclick=()=>askQuick(+c.getAttribute("data-q")));
+}
+function renderAskNote(){document.getElementById("askNote").textContent=T("askHint");}
+/* ================= ASK GUIDE ================= */
+const chatlog=document.getElementById("chatlog");
+function addMsg(txt,who){const d=document.createElement("div");d.className="msg "+who;d.innerHTML=txt;chatlog.appendChild(d);chatlog.scrollTop=chatlog.scrollHeight;}
+function askQuick(i){
+  const qs=lang==="en"?["dim sum","beach","museum","one day"]:["早茶","海滩","博物馆","一日游"];
+  handleAsk(qs[i]);
+}
+function handleAsk(raw){
+  addMsg(raw,"u");
+  const q=raw.toLowerCase();
+  let reply="";
+  if(/one day|一日游|1日|itinerary|全天/.test(q)){
+    reply=lang==="en"?"Here are 3 ready-made one-day plans (see the ★ panel). Tap one to plan the route!":"这里有三条现成的一日游路线（见★面板），点击即可规划路线！";
+  }else if(/dim sum|早茶|点心|yum|茶楼/.test(q)){
+    reply=lang==="en"?poiReply("food","dim sum","Dian Dou De at Grand Theater (L1/2/5) is the classic choice — arrive before 10:00."):poiReply("food","早茶","大剧院站（1/2/5号线）旁的点都德是经典之选，建议10点前到。");
+  }else if(/hotpot|牛肉|火锅/.test(q)){
+    reply=lang==="en"?poiReply("food","beef hotpot","Baheli at Huaqiangbei (L2/7) — hand-cut beef with satay sauce."):poiReply("food","牛肉火锅","华强北站（2/7号线）的八合里海记，现切牛肉配沙茶酱。");
+  }else if(/seafood|海鲜|oyster|蚝|蟹/.test(q)){
+    reply=lang==="en"?poiReply("food","seafood","Shekou Seafood Street (Dongjiaotou, L2) — pick live seafood by the harbour."):poiReply("food","海鲜","东角头站（2号线）蛇口海鲜街，渔港边即点即煮。");
+  }else if(/beach|海|沙滩|sunset|日落/.test(q)){
+    reply=lang==="en"?poiReply("scenic","beach","Dameisha Beach (L8) is Shenzhen's favourite; Shenzhen Bay Park (L9) is right at the metro exit."):poiReply("scenic","海滩","大梅沙（8号线）最受欢迎；深圳湾公园（9号线）出站即是海。");
+  }else if(/mountain|山|hike|登山|梧桐/.test(q)){
+    reply=lang==="en"?poiReply("scenic","hiking","Wutong Mountain (L8, Wutongshan South) is the highest peak — allow 3–4 h."):poiReply("scenic","登山","梧桐山（8号线梧桐山南）是深圳第一峰，需预留3-4小时。");
+  }else if(/museum|博物馆|文化|history|历史/.test(q)){
+    reply=lang==="en"?poiReply("culture","museum","Shenzhen Museum (Civic Center, L2/4) is free (closed Mon); Nantou Ancient City (L12) is 1,700 years old."):poiReply("culture","博物馆","市民中心站（2/4号线）深圳博物馆免费（周一闭馆）；南头古城（12号线）有1700年历史。");
+  }else if(/park|公园/.test(q)&&!/museum|博物馆/.test(q)){
+    reply=lang==="en"?poiReply("scenic","park","Lianhuashan Park (L3/4, Children's Palace) has the best CBD view; Hongqiao Park (L6B) is the famous red ribbon."):poiReply("scenic","公园","少年宫站（3/4号线）莲花山公园可俯瞰CBD；虹桥公园（6支）是网红红丝带。");
+  }else if(/from .+ to .+|从.+到|怎么|how do i get|路线|去.+怎么/.test(q)){
+    const m=q.match(/from (.+?) to (.+)/)||q.match(/从(.+?)到(.+)/);
+    if(m){const a=m[1].trim().replace(/^to /,""),b=m[2].trim();
+      const toStn=s=>{const p=POIS.find(x=>x.e.toLowerCase()===s||x.z===s);return p?p.s:s;};
+      document.getElementById("from").value=toStn(a);document.getElementById("to").value=toStn(b);
+      document.querySelectorAll("[data-tab]").forEach(x=>x.classList.toggle("active",x.getAttribute("data-tab")==="route"));
+      document.querySelectorAll(".panel").forEach(x=>x.classList.toggle("active",x.id==="panel-route"));
+      doPlan();reply=lang==="en"?"Route planned in the 🚉 tab!":"已在🚉标签页为你规划好路线！";}
+    else reply=lang==="en"?"Try \"from OCT to Dameisha\" or \"from 华侨城 to 大梅沙\".":"试试说「从华侨城到大梅沙」。";
+  }else{
+    reply=lang==="en"?`I can help with: ${["🍜 dim sum","🍲 hotpot","🦪 seafood","🏖️ beach","⛰️ hiking","🏛️ museums","🗺️ one-day plans"].join(" · ")}
+      or plan a route: "from X to Y".`:`我可以帮你：${["🍜 早茶","🍲 牛肉火锅","🦪 海鲜","🏖️ 海滩","⛰️ 登山","🏛️ 博物馆","🗺️ 一日游"].join(" · ")}，也可以规划路线：「从X到Y」。`;
+  }
+  addMsg(reply,"a");
+}
+function poiReply(cat,kw,extra){
+  const items=POIS.filter(p=>p.c===cat).slice(0,3);
+  return items.map(p=>`${p.ico} <b>${lang==="en"?p.e:p.z}</b> — ${lang==="en"?p.de:p.d}<br>`).join("")+`<div style="margin-top:5px">${extra}</div>`;
+}
+/* ================= AUTOCOMPLETE & INIT ================= */
+(function(){
+  const dl=document.createElement("datalist");dl.id="stnList";
+  const names=new Set();
+  ALLSTN.forEach(s=>{names.add(s);});
+  POIS.forEach(p=>{names.add(p.z);names.add(p.e);});
+  names.forEach(n=>{const o=document.createElement("option");o.value=n;dl.appendChild(o);});
+  document.body.appendChild(dl);
+  document.getElementById("from").setAttribute("list","stnList");
+  document.getElementById("to").setAttribute("list","stnList");
+
+  document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{
+    const t=b.getAttribute("data-tab");
+    document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("active",x===b));
+    document.querySelectorAll(".panel").forEach(x=>x.classList.toggle("active",x.id==="panel-"+t));
+  });
+  document.querySelectorAll("#filters button").forEach(b=>b.onclick=()=>{
+    poiFilter=b.getAttribute("data-f");
+    document.querySelectorAll("#filters button").forEach(x=>x.classList.toggle("on",x===b));
+    renderPOIs();
+  });
+  document.getElementById("goBtn").onclick=doPlan;
+  document.getElementById("from").onchange=()=>{curFrom=document.getElementById("from").value.trim();};
+  document.getElementById("to").onchange=()=>{curTo=document.getElementById("to").value.trim();};
+  const chatIn=document.getElementById("chatIn");
+  const send=()=>{const v=chatIn.value.trim();if(v){handleAsk(v);chatIn.value="";}};
+  document.getElementById("chatSend").onclick=send;
+  chatIn.onkeydown=e=>{if(e.key==="Enter")send();};
+  document.getElementById("lang-en").onclick=()=>{lang="en";applyLang();};
+  document.getElementById("lang-zh").onclick=()=>{lang="zh";applyLang();};
+
+  drawMap();renderPOIs();renderItins();renderQuick();renderAskNote();
+  applyLang();
+  addMsg(T("welcome"),"a");
+})();
+
+</script>
+</body>
+</html>
